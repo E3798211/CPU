@@ -209,6 +209,15 @@ int Stack::Push(MyType* new_elem)
     return SUCCESS;
 }
 
+long long int Stack::GetSize()
+{
+    return _size;
+}
+
+long long int Stack::GetNElem()
+{
+    return _n_elem;
+}
 
 // DEBUG
 

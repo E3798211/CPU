@@ -1,6 +1,8 @@
 #ifndef STACK_H_INCLUDED
 #define STACK_H_INCLUDED
 
+#include "Errors.h"
+
 #include <iostream>
 #include <assert.h>
 
@@ -20,18 +22,6 @@
 
 
 #define ERR_WHERE "In " << __FILE__ << ": " << __func__ << "(): " << ex.what()
-
-/// Error codes
-enum ERR_CODE{
-    SUCCESS = 0,
-    BAD_ALLOC,
-    NOT_ENOUGH_ELEMENTS,
-    OVERFLOWN,
-
-    FIRST_EDGE_BROKEN,
-    SCOND_EDGE_BROKEN,
-    HASH_WRONG
-};
 
 
 #define ASSERT()  {                                         \
@@ -97,6 +87,9 @@ public:
         \param [in] new_elem    New element in stack.
     */
     int Push(MyType* new_elem);
+
+    long long int GetSize();
+    long long int GetNElem();
 
 
 
