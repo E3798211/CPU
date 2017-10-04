@@ -8,6 +8,9 @@
 #include <string.h>
 #include <cmath>
 
+#define BINOPERATOR( op )           \\
+
+
 
 class Cpu {
 private:

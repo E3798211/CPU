@@ -1,8 +1,5 @@
 #include "Cpu.h"
 
-
-// execute
-
 // sub -
 // mul *
 // fsqrt
@@ -33,6 +30,7 @@ int Cpu::Execute()
         Cpu::Dump();
     }else if(!strcmp(cmd, "add")){
         int res = Cpu::Add();
+        //int res = BINOPERATOR(+);
 
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
