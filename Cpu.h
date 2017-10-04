@@ -19,14 +19,11 @@ public:
     int Run();
     int Execute();
 
-    int Add();
-    int Subst();
-    int Mult();
-    int Div();
-    int Sqrt();
-
     bool Ok();
     bool Dump();
+
+    int UnOp(MyType (*pOperation)(MyType a));
+    int BinOp(MyType (*pOperation)(MyType a, MyType b));
 
 };
 

@@ -32,35 +32,50 @@ int Cpu::Execute()
         Cpu::st.Pop(&cmd_arg);
         Cpu::Dump();
     }else if(!strcmp(cmd, "add")){
-        int res = Cpu::Add();
-
+        int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
+                                    {
+                                        return a + b;
+                                    });
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
         Cpu::Dump();
     }else if(!strcmp(cmd, "subst")){
-        int res = Cpu::Subst();
+        int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
+                                    {
+                                        return b - a;
+                                    });
 
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
         Cpu::Dump();
     }else if(!strcmp(cmd, "mult")){
-        int res = Cpu::Mult();
+        int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
+                                    {
+                                        return a * b;
+                                    });
 
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
         Cpu::Dump();
     }else if(!strcmp(cmd, "div")){
-        int res = Cpu::Div();
+        int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
+                                    {
+                                        return b / a;
+                                    });
 
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
         Cpu::Dump();
     }else if(!strcmp(cmd, "sqrt")){
-        int res = Cpu::Sqrt();
+        //int res = Cpu::Sqrt();
+        int res = Cpu::UnOp([] (MyType a)-> MyType
+                                    {
+                                        return std::sqrt(a);
+                                    });
 
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
@@ -71,113 +86,7 @@ int Cpu::Execute()
     return 0;
 }
 
-int Cpu::Add()
-{
-    // ASSERT
 
-    if(st.GetNElem() < 2)
-        return NOT_ENOUGH_ELEMENTS;
-
-    MyType first  = 0;
-    MyType second = 0;
-
-    Cpu::st.Pop(&first);
-    Cpu::st.Pop(&second);
-
-    MyType third = first + second;      // ?
-
-    Cpu::st.Push(&third);
-
-    // ASSERT
-
-    return SUCCESS;
-}
-
-int Cpu::Subst()
-{
-    // ASSERT
-
-    if(st.GetNElem() < 2)
-        return NOT_ENOUGH_ELEMENTS;
-
-    MyType first  = 0;
-    MyType second = 0;
-
-    Cpu::st.Pop(&first);
-    Cpu::st.Pop(&second);
-
-    MyType third = second - first;      // ?
-
-    Cpu::st.Push(&third);
-
-    // ASSERT
-
-    return SUCCESS;
-}
-
-int Cpu::Mult()
-{
-    // ASSERT
-
-    if(st.GetNElem() < 2)
-        return NOT_ENOUGH_ELEMENTS;
-
-    MyType first  = 0;
-    MyType second = 0;
-
-    Cpu::st.Pop(&first);
-    Cpu::st.Pop(&second);
-
-    MyType third = second * first;      // ?
-
-    Cpu::st.Push(&third);
-
-    // ASSERT
-
-    return SUCCESS;
-}
-
-int Cpu::Div()
-{
-    // ASSERT
-
-    if(st.GetNElem() < 2)
-        return NOT_ENOUGH_ELEMENTS;
-
-    MyType first  = 0;
-    MyType second = 0;
-
-    Cpu::st.Pop(&first);
-    Cpu::st.Pop(&second);
-
-    MyType third = second / first;      // ?
-
-    Cpu::st.Push(&third);
-
-    // ASSERT
-
-    return SUCCESS;
-}
-
-int Cpu::Sqrt()
-{
-    // ASSERT
-
-    if(st.GetNElem() < 1)
-        return NOT_ENOUGH_ELEMENTS;
-
-    MyType sqrt_arg = 0;
-
-    Cpu::st.Pop(&sqrt_arg);
-
-    MyType sqrt = std::sqrt(sqrt_arg);
-
-    Cpu::st.Push(&sqrt);
-
-    // ASSERT
-
-    return SUCCESS;
-}
 
 bool Cpu::Ok()
 {
@@ -187,5 +96,48 @@ bool Cpu::Ok()
 bool Cpu::Dump()
 {
     return Cpu::st.Dump("Cpu::Dump");
+}
+
+
+int Cpu::UnOp(MyType (*pOperation)(MyType a))
+{
+    // ASSERT
+
+    if(st.GetNElem() < 1)
+        return NOT_ENOUGH_ELEMENTS;
+
+    MyType arg = 0;
+
+    Cpu::st.Pop(&arg);
+
+    MyType result = (*pOperation)(arg);
+
+    Cpu::st.Push(&result);
+
+    // ASSERT
+
+    return SUCCESS;
+}
+
+int Cpu::BinOp(MyType (*pOperation)(MyType a, MyType b))
+{
+    // ASSERT
+
+    if(st.GetNElem() < 2)
+        return NOT_ENOUGH_ELEMENTS;
+
+    MyType first  = 0;
+    MyType second = 0;
+
+    Cpu::st.Pop(&first);
+    Cpu::st.Pop(&second);
+
+    MyType third = (*pOperation)(first, second);
+
+    Cpu::st.Push(&third);
+
+    // ASSERT
+
+    return SUCCESS;
 }
 
