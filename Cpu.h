@@ -17,6 +17,7 @@ public:
     Cpu() {};
 
     int Run();
+    int Execute();
 
     int Add();
     int Subst();
@@ -26,6 +27,7 @@ public:
 
     bool Ok();
     bool Dump();
+
 };
 
 

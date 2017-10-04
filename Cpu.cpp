@@ -1,56 +1,71 @@
 #include "Cpu.h"
 
+
+// execute
+
+// sub -
+// mul *
+// fsqrt
+
+
 int Cpu::Run()
 {
     while(1){
-        char cmd[20] = "";
-        MyType cmd_arg  = 0;
+        Cpu::Execute();
+    }
 
-        cout << "Enter command: ";
-        cin >> cmd >> cmd_arg;
+    return 0;
+}
 
-        if      (!strcmp(cmd, "push")){
-            Cpu::st.Push(&cmd_arg);
-            Cpu::Dump();
-        }else if(!strcmp(cmd, "pop")){
-            Cpu::st.Pop(&cmd_arg);
-            Cpu::Dump();
-        }else if(!strcmp(cmd, "add")){
-            int res = Cpu::Add();
+int Cpu::Execute()
+{
+    char cmd[20] = "";
+    MyType cmd_arg  = 0;
 
-            if(res == NOT_ENOUGH_ELEMENTS)
-                cout << "\nNot enought elements in the stack" << endl;
+    cout << "Enter command: ";
+    cin >> cmd >> cmd_arg;
 
-            Cpu::Dump();
-        }else if(!strcmp(cmd, "subst")){
-            int res = Cpu::Subst();
+    if      (!strcmp(cmd, "push")){
+        Cpu::st.Push(&cmd_arg);
+        Cpu::Dump();
+    }else if(!strcmp(cmd, "pop")){
+        Cpu::st.Pop(&cmd_arg);
+        Cpu::Dump();
+    }else if(!strcmp(cmd, "add")){
+        int res = Cpu::Add();
 
-            if(res == NOT_ENOUGH_ELEMENTS)
-                cout << "\nNot enought elements in the stack" << endl;
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
 
-            Cpu::Dump();
-        }else if(!strcmp(cmd, "mult")){
-            int res = Cpu::Mult();
+        Cpu::Dump();
+    }else if(!strcmp(cmd, "subst")){
+        int res = Cpu::Subst();
 
-            if(res == NOT_ENOUGH_ELEMENTS)
-                cout << "\nNot enought elements in the stack" << endl;
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
 
-            Cpu::Dump();
-        }else if(!strcmp(cmd, "div")){
-            int res = Cpu::Div();
+        Cpu::Dump();
+    }else if(!strcmp(cmd, "mult")){
+        int res = Cpu::Mult();
 
-            if(res == NOT_ENOUGH_ELEMENTS)
-                cout << "\nNot enought elements in the stack" << endl;
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
 
-            Cpu::Dump();
-        }else if(!strcmp(cmd, "sqrt")){
-            int res = Cpu::Sqrt();
+        Cpu::Dump();
+    }else if(!strcmp(cmd, "div")){
+        int res = Cpu::Div();
 
-            if(res == NOT_ENOUGH_ELEMENTS)
-                cout << "\nNot enought elements in the stack" << endl;
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
 
-            Cpu::Dump();
-        }
+        Cpu::Dump();
+    }else if(!strcmp(cmd, "sqrt")){
+        int res = Cpu::Sqrt();
+
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
+
+        Cpu::Dump();
     }
 
     return 0;
@@ -96,6 +111,8 @@ int Cpu::Subst()
     Cpu::st.Push(&third);
 
     // ASSERT
+
+    return SUCCESS;
 }
 
 int Cpu::Mult()
@@ -116,6 +133,8 @@ int Cpu::Mult()
     Cpu::st.Push(&third);
 
     // ASSERT
+
+    return SUCCESS;
 }
 
 int Cpu::Div()
@@ -136,6 +155,8 @@ int Cpu::Div()
     Cpu::st.Push(&third);
 
     // ASSERT
+
+    return SUCCESS;
 }
 
 int Cpu::Sqrt()
@@ -154,6 +175,8 @@ int Cpu::Sqrt()
     Cpu::st.Push(&sqrt);
 
     // ASSERT
+
+    return SUCCESS;
 }
 
 bool Cpu::Ok()
@@ -165,3 +188,4 @@ bool Cpu::Dump()
 {
     return Cpu::st.Dump("Cpu::Dump");
 }
+
