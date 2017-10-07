@@ -94,57 +94,12 @@ Stack::~Stack()
     ASSERT();
 }
 
-/*
-// SHOULD BE CHECKED!!!
-
-Stack::Stack(MyType* elements, int n_elements)
-{
-    //Exceptions
-    assert(elements != nullptr);
-    assert(n_elements > 0);
-
-    int new_size = 1;
-    while(new_size < n_elements)
-        new_size *= 2;
-
-    _stack  = elements;
-    _size   = new_size;
-    _n_elem = n_elements;
-}
-
-Stack::~Stack()
-{
-    if (_n_elem != 0){
-        delete [] _stack;
-        _stack = nullptr;
-    }
-}
-
-int Stack::Push(MyType* new_elem)
-{
-    //Exceptions
-    assert(new_elem != nullptr);
-
-
-    // SHOULD BE CHECKED FOR BAD ALLOC IN StackResize()
-
-
-    if(_n_elem >= _size){
-        _size *= 2;
-        StackResize(_size);
-    }
-
-    _stack[_n_elem] = *new_elem;
-    _n_elem++;
-
-    return SUCCESS;
-}
-*/
 
 int Stack::Pop(MyType* pop_elem)
 {
     //Exceptions
     assert(pop_elem != nullptr);
+
 
     ASSERT();
 
@@ -161,10 +116,6 @@ int Stack::Pop(MyType* pop_elem)
     // Re-hash
     _hash = HashCount();
 
-
-    // SHOULD BE CHECKED FOR BAD ALLOC IN StackResize()
-
-
     bool resize_need = false;
 
     if(_n_elem < 2)
@@ -172,11 +123,15 @@ int Stack::Pop(MyType* pop_elem)
     else
         resize_need = (_n_elem < (_size - 4)/ 2)? true : false;
 
+    int err = 0;
     if(resize_need)
-        StackResize((_size - 2)/ 2 + 2);
+        err = StackResize((_size - 2)/ 2 + 2);
 
+    if(err == BAD_ALLOC)
+        return BAD_ALLOC;
 
     ASSERT();
+
     return SUCCESS;
 }
 
@@ -185,19 +140,20 @@ int Stack::Push(MyType* new_elem)
     //Exceptions
     assert(new_elem != nullptr);
 
+
     ASSERT();
 
-
-    // SHOULD BE CHECKED FOR BAD ALLOC IN StackResize()
-
-
     if(_n_elem > MAX_SIZE){
-        cout << "Too much elements already placed" << endl;
+        DEBUG cout << "Too much elements already placed" << endl;
         return OVERFLOWN;
     }
 
+    int err = 0;
     if(_n_elem >= (_size - 2))
-        StackResize((_size - 2)*2 + 2);
+        err = StackResize((_size - 2)*2 + 2);
+
+    if(err == BAD_ALLOC)
+        return BAD_ALLOC;
 
     _stack[_n_elem + 1] = *new_elem;
     _n_elem++;
@@ -206,6 +162,7 @@ int Stack::Push(MyType* new_elem)
     _hash = HashCount();
 
     ASSERT();
+
     return SUCCESS;
 }
 

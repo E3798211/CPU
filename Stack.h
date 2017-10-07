@@ -61,6 +61,8 @@ private:
 
     /// Resizing stack
     /**
+        Returns SUCCESS if resize successfuly passed, error code otherwise.
+
         \param new_size     New size of the stack
     */
     int StackResize(long long int new_size);
@@ -69,6 +71,9 @@ private:
     long long int _hash = 0;
 
     /// Hash-counter
+    /**
+        Hash-count algorithm. Returns counted hash.
+    */
     int HashCount();
 
 public:
@@ -80,26 +85,58 @@ public:
     ~Stack();
 
     /// Pop element
+    /**
+        Rerturns SUCCESS if everything is ok, error code otherwise.
+
+        \param [out] pop_elem    Pointer to varriable where element will be poped.
+    */
     int Pop(MyType* pop_elem);
 
     /// Push element
     /**
+        Rerturns SUCCESS if everything is ok, error code otherwise.
+
         \param [in] new_elem    New element in stack.
     */
     int Push(MyType* new_elem);
 
+    /// Gets _size
     long long int GetSize();
+
+    /// Gets _n_elem.
     long long int GetNElem();
 
 
 
-    // DEBUG
+    /// Checks if elem is EDGE.
+    /**
+        Returns TRUE if element is EDGE, FALSE otherwise.
+
+        \param [in] elem    Element to be checked.
+    */
     bool IsEdge(MyType elem);
+
+    /// Checks if elem is EMPT.
+    /**
+        Returns TRUE if element is EMPT, FALSE otherwise.
+
+        \param [in] elem    Element to be checked.
+    */
     bool IsEmpt(MyType elem);
 
-    // Verifier
+
+
+    /// Verifier
+    /**
+        Return error code.
+    */
     int  Ok();
 
+    /// Dump.
+    /**
+        Prints all available information about stack.
+        Returns TRUE if all info was printed, FALSE otherwise (in case of some error).
+    */
     bool Dump(const char* func_name = __func__, int err_code = SUCCESS);
 
     // Print elements

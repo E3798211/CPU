@@ -106,7 +106,7 @@ int Cpu::PrintStack()
 
 
 
-bool Cpu::Ok()
+int Cpu::Ok()
 {
     return Cpu::st.Ok();
 }
