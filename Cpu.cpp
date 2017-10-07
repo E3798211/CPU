@@ -1,18 +1,14 @@
 #include "Cpu.h"
 
 
-// execute
-
-// sub -
-// mul *
-// fsqrt
-
-
 int Cpu::Run()
 {
-    while(1){
-        Cpu::Execute();
+    int status = 1;
+    while(status != -1){
+        status = Cpu::Execute();
     }
+
+    cout << "Runnig ended." << endl;
 
     return 0;
 }
@@ -21,21 +17,24 @@ int Cpu::Execute()
 {
     CPU_ASSERT();
 
-    char cmd[20] = "";
+    int cmd = -1;
     MyType cmd_arg  = 0;
 
     cout << "Enter command: ";
     cin >> cmd >> cmd_arg;
 
-    if      (!strcmp(cmd, "push")){
+    if      (cmd == PUSH){
+
         Cpu::st.Push(&cmd_arg);
-        //Cpu::Dump();
         Cpu::PrintStack();
-    }else if(!strcmp(cmd, "pop")){
+
+    }else if(cmd == POP){
+
         Cpu::st.Pop(&cmd_arg);
-        //Cpu::Dump();
         Cpu::PrintStack();
-    }else if(!strcmp(cmd, "add")){
+
+    }else if(cmd == ADD){
+
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
                                         return a + b;
@@ -43,52 +42,54 @@ int Cpu::Execute()
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        //Cpu::Dump();
         Cpu::PrintStack();
-    }else if(!strcmp(cmd, "subst")){
+
+    }else if(cmd == SUB){
+
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
                                         return b - a;
                                     });
-
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        //Cpu::Dump();
         Cpu::PrintStack();
-    }else if(!strcmp(cmd, "mult")){
+
+    }else if(cmd == MUL){
+
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
                                         return a * b;
                                     });
-
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        //Cpu::Dump();
         Cpu::PrintStack();
-    }else if(!strcmp(cmd, "div")){
+
+    }else if(cmd == DIV){
+
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
                                         return b / a;
                                     });
-
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        //Cpu::Dump();
         Cpu::PrintStack();
-    }else if(!strcmp(cmd, "sqrt")){
+
+    }else if(cmd == FSQRT){
+
         int res = Cpu::UnOp([] (MyType a)-> MyType
                                     {
                                         return std::sqrt(a);
                                     });
-
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        //Cpu::Dump();
         Cpu::PrintStack();
+
+    }else if(cmd == END){
+        return -1;
     }
 
     CPU_ASSERT();

@@ -3,6 +3,7 @@
 
 #include "Stack.h"
 #include "Errors.h"
+#include "Commands.h"
 
 #include <stdio.h>
 #include <string.h>
