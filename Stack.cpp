@@ -317,4 +317,20 @@ bool Stack::Dump(const char* func_name, int err_code)
     return true;
 }
 
+// Print
+
+int Stack::PrintStack()
+{
+    ASSERT();
+
+    int i = 0;
+    while(i < _n_elem){
+        cout << "[" << i << "] = \t" << _stack[i + 1] << endl;
+        i++;
+    }
+
+    ASSERT();
+
+    return i;
+}
 

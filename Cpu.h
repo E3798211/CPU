@@ -9,6 +9,16 @@
 #include <cmath>
 
 
+#define CPU_ASSERT()            \
+    {                           \
+        int err = Cpu::Ok();    \
+        if(err != SUCCESS){     \
+            Cpu::Dump();        \
+            assert(0);          \
+        }                       \
+    }
+
+
 class Cpu {
 private:
     Stack st;
@@ -18,6 +28,7 @@ public:
 
     int Run();
     int Execute();
+    int PrintStack();
 
     bool Ok();
     bool Dump();

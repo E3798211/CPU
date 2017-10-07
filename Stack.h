@@ -101,6 +101,9 @@ public:
     int  Ok();
 
     bool Dump(const char* func_name = __func__, int err_code = SUCCESS);
+
+    // Print elements
+    int PrintStack();
 private:
     /// Last canary
     int _edge_2 = EDGE;
