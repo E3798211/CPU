@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Cpu.h"
 
-const int CMD_SEQ_LEN = 5;
+//const int CMD_SEQ_LEN = 5;
 
 
 //const int PUSH  = 1;
@@ -14,5 +14,7 @@ int main()
 {
     Cpu cpu;
 
-    cpu.Run();
+    //cpu.Run();
+    //double* arr = nullptr;
+    cpu.FileRead(nullptr, "1.txt");
 }

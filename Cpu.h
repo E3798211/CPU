@@ -5,7 +5,8 @@
 #include "Errors.h"
 #include "Commands.h"
 
-#include <stdio.h>
+#include <assert.h>
+#include <cstdio>
 #include <string.h>
 #include <cmath>
 
@@ -19,6 +20,8 @@
         }                       \
     }
 
+const char GENUINE_SIGNATURE[]  = "EK";
+const int  GENUINE_VERSION      = 1;
 
 class Cpu {
 private:
@@ -29,7 +32,17 @@ public:
     Cpu() {};
 
 
-    /// Run. Calls execute().
+    /// Reads file with commands.
+    /**
+        Returns error code.
+
+        \param [in, out]    cmd_sequence    Array with commands' numbers. Last num is (-1).
+        \param [in]         filename        Name of the file with compiled code.
+    */
+    int FileRead(double* cmd_sequence, char* filename);
+
+
+    /// Run. Calls execute() in a loop.
     int Run();
 
     /// Executes command.
