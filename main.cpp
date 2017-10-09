@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Cpu.h"
 #include "Stack.h"
+#include "Assembler.h"
 
 struct Str{
     int _edge_1 = EDGE;
@@ -14,6 +15,7 @@ int main()
     //Cpu cpu;
     //cpu.Run("1.txt");
 
+    /*
     Stack st;
     Str* hack = (Str*)&st;
 
@@ -21,4 +23,7 @@ int main()
 
     MyType a = 5;
     st.Push(&a);
+    */
+
+    FileRead("2.txt", "3.txt");
 }
