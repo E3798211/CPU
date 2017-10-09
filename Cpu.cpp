@@ -79,58 +79,57 @@ int Cpu::FileRead(double* &cmd_sequence, char* file_name)
         }
     }
 
-    for(int i = 0; i < n_cmds; i++)
-        cout << cmd_sequence[i] << endl;
-
     return SUCCESS;
 }
 
 
-int Cpu::Run()
+int Cpu::Run(char* file_name)
 {
-    /*
-    int status = 1;
-    while(status != -1){
-        status = Cpu::Execute();
-    }
+    CPU_ASSERT();
 
-    cout << "Runnig ended." << endl;
-
-    return 0;
-    */
     double* cmd_sequence = nullptr;
-    if(Cpu::FileRead(cmd_sequence, "1.txt") != SUCCESS){
+    if(Cpu::FileRead(cmd_sequence, file_name) != SUCCESS){
         DEBUG cout << "Problems with file." << endl;
+
+        CPU_ASSERT();
         return FILE_ERROR;
     }
 
     int cmd_num = 0;
     while(cmd_sequence[cmd_num] != END){
-        cout << "Cpu::Run" << endl;
+        cout << "Command num = " << cmd_num << endl;
+
+        if(Cpu::Execute(cmd_sequence, cmd_num) == UNKNOWN_CMD){
+            DEBUG cout << "!!! Unknown command!\n!!! Process terminated." << endl;
+
+            CPU_ASSERT();
+            return FATAL_ERROR;
+        }
+        cmd_num++;
+
+        Cpu::PrintStack();
     }
+
+    CPU_ASSERT();
+
+    return SUCCESS;
 }
 
-int Cpu::Execute()
+int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 {
     CPU_ASSERT();
 
-    int cmd = -1;
-    MyType cmd_arg  = 0;
+    if      (cmd_sequence[cmd_num] == PUSH){
 
-    cout << "Enter command: ";
-    cin >> cmd >> cmd_arg;
+        cmd_num++;
+        Cpu::st.Push(&cmd_sequence[cmd_num]);
 
-    if      (cmd == PUSH){
+    }else if(cmd_sequence[cmd_num] == POP){
 
-        Cpu::st.Push(&cmd_arg);
-        Cpu::PrintStack();
+        cmd_num++;
+        Cpu::st.Pop(&cmd_sequence[cmd_num]);
 
-    }else if(cmd == POP){
-
-        Cpu::st.Pop(&cmd_arg);
-        Cpu::PrintStack();
-
-    }else if(cmd == ADD){
+    }else if(cmd_sequence[cmd_num] == ADD){
 
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
@@ -139,9 +138,8 @@ int Cpu::Execute()
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        Cpu::PrintStack();
 
-    }else if(cmd == SUB){
+    }else if(cmd_sequence[cmd_num] == SUB){
 
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
@@ -150,9 +148,8 @@ int Cpu::Execute()
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        Cpu::PrintStack();
 
-    }else if(cmd == MUL){
+    }else if(cmd_sequence[cmd_num] == MUL){
 
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
@@ -161,9 +158,8 @@ int Cpu::Execute()
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        Cpu::PrintStack();
 
-    }else if(cmd == DIV){
+    }else if(cmd_sequence[cmd_num] == DIV){
 
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
@@ -172,9 +168,8 @@ int Cpu::Execute()
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        Cpu::PrintStack();
 
-    }else if(cmd == FSQRT){
+    }else if(cmd_sequence[cmd_num] == FSQRT){
 
         int res = Cpu::UnOp([] (MyType a)-> MyType
                                     {
@@ -183,15 +178,16 @@ int Cpu::Execute()
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
 
-        Cpu::PrintStack();
 
-    }else if(cmd == END){
-        return -1;
+    }else if(cmd_sequence[cmd_num] == END){
+        return END;
+    }else{
+        return  UNKNOWN_CMD;
     }
 
     CPU_ASSERT();
 
-    return 0;
+    return SUCCESS;
 }
 
 int Cpu::PrintStack()

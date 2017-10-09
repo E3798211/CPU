@@ -2,7 +2,8 @@
 #define ERRORS_H_INCLUDED
 
 enum ERR_CODE{
-    SUCCESS = 0,
+    FATAL_ERROR = -1,
+    SUCCESS     = 0,
     BAD_ALLOC,
     NOT_ENOUGH_ELEMENTS,
     OVERFLOWN,

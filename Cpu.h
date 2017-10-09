@@ -50,13 +50,22 @@ public:
 
 
     /// Run. Calls execute() in a loop.
-    int Run();
+    /**
+        Returns SUCCESS if everyting is ok, FATAL_ERROR otherwise.
+
+        \param [in] file_name   Name of the file with commands.
+    */
+    int Run(char* file_name);
 
     /// Executes command.
     /**
-        Returns (-1) if END reached, 0 otherwise.
+        Returns END if END reached, SUCCESS otherwise.
+        \warning cmd_num can and probably would be changed inside!
+
+        \param [in] cmd_sequence    List with commands.
+        \param [in] cmd_num         Num of the command to be executed.
     */
-    int Execute();
+    int Execute(double* cmd_sequence, int &cmd_num);
 
     /// Prints stack content.
     /**
