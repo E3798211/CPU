@@ -46,7 +46,7 @@ public:
         \param [in, out]    cmd_sequence    Array with commands' numbers. Last num is always (-1).
         \param [in]         filename        Name of the file with compiled code.
     */
-    int FileRead(double* cmd_sequence, char* filename);
+    int FileRead(double* &cmd_sequence, char* filename);
 
 
     /// Run. Calls execute() in a loop.

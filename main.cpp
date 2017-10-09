@@ -14,7 +14,7 @@ int main()
 {
     Cpu cpu;
 
-    //cpu.Run();
-    double* arr = nullptr;
-    cpu.FileRead(arr, "1.txt");
+    cpu.Run();
+    //double* arr = nullptr;
+    //cpu.FileRead(arr, "1.txt");
 }

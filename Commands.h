@@ -2,6 +2,7 @@
 #define COMMANDS_H_INCLUDED
 
 enum CMDS{
+    END  = -1,
     PUSH = 1,
     POP,
 
@@ -9,9 +10,7 @@ enum CMDS{
     SUB,
     DIV,
     MUL,
-    FSQRT,
-
-    END
+    FSQRT
 };
 
 #endif // COMMANDS_H_INCLUDED

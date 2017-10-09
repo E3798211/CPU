@@ -1,7 +1,7 @@
 #include "Cpu.h"
 
 
-int Cpu::FileRead(double* cmd_sequence, char* file_name)
+int Cpu::FileRead(double* &cmd_sequence, char* file_name)
 {
     // Exceptions
     assert(file_name != nullptr);
@@ -68,7 +68,7 @@ int Cpu::FileRead(double* cmd_sequence, char* file_name)
         cmd_sequence = new double [n_cmds];
     }
     catch(const std::bad_alloc& ex){
-        cout << ERR_WHERE << ". Cannot allocate " << n_cmds << " bytes." << endl;
+        cout << ERR_WHERE << ". Cannot allocate " << n_cmds << " doubles." << endl;
         return BAD_ALLOC;
     }
 
@@ -79,12 +79,16 @@ int Cpu::FileRead(double* cmd_sequence, char* file_name)
         }
     }
 
+    for(int i = 0; i < n_cmds; i++)
+        cout << cmd_sequence[i] << endl;
+
     return SUCCESS;
 }
 
 
 int Cpu::Run()
 {
+    /*
     int status = 1;
     while(status != -1){
         status = Cpu::Execute();
@@ -93,6 +97,17 @@ int Cpu::Run()
     cout << "Runnig ended." << endl;
 
     return 0;
+    */
+    double* cmd_sequence = nullptr;
+    if(Cpu::FileRead(cmd_sequence, "1.txt") != SUCCESS){
+        DEBUG cout << "Problems with file." << endl;
+        return FILE_ERROR;
+    }
+
+    int cmd_num = 0;
+    while(cmd_sequence[cmd_num] != END){
+        cout << "Cpu::Run" << endl;
+    }
 }
 
 int Cpu::Execute()
