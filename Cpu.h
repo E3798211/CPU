@@ -20,8 +20,15 @@
         }                       \
     }
 
+
+//const char WRONG_SIGNATURE[]    = "WRONGSIGNATURE";
+
+
+#define WRONG_SIGNATURE "WRONGSIGNATURE"
+const int  WRONG_VERSION        = -1;
 const char GENUINE_SIGNATURE[]  = "EK";
 const int  GENUINE_VERSION      = 1;
+
 
 class Cpu {
 private:
@@ -36,7 +43,7 @@ public:
     /**
         Returns error code.
 
-        \param [in, out]    cmd_sequence    Array with commands' numbers. Last num is (-1).
+        \param [in, out]    cmd_sequence    Array with commands' numbers. Last num is always (-1).
         \param [in]         filename        Name of the file with compiled code.
     */
     int FileRead(double* cmd_sequence, char* filename);

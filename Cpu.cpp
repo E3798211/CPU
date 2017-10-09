@@ -3,6 +3,9 @@
 
 int Cpu::FileRead(double* cmd_sequence, char* file_name)
 {
+    // Exceptions
+    assert(file_name != nullptr);
+
     FILE *input = fopen(file_name, "r");
     if(input == nullptr){
         DEBUG cout << "File not found!" << endl;
@@ -21,65 +24,62 @@ int Cpu::FileRead(double* cmd_sequence, char* file_name)
         return FILE_POS_ERROR;
     }
 
+    //fclose(input);
+    //input = fopen(file_name, "r");
     //cout << "setvbuf = " << setvbuf(input, nullptr, _IOFBF, file_size) << endl;
 
-    // Creating buffer
-    char* cmd_in_line = nullptr;
+
+    // Reading file's beginning
+    rewind(input);
+
+    char signature[] = WRONG_SIGNATURE;
+    int  version     = WRONG_VERSION;
+
+    if(!fscanf(input, "%s", signature)){
+        DEBUG cout << "Can not read signature!" << endl;
+        return READ_ERROR;
+    }
+    if(!fscanf(input, "%d", &version)){
+        DEBUG cout << "Can not read processor version!" << endl;
+        return READ_ERROR;
+    }
+
+    int n_cmds = -1;
+    if(!fscanf(input, "%d", &n_cmds)){
+        DEBUG cout << "Can not read amount of commands!" << endl;
+        return READ_ERROR;
+    }
+
+
+    // Check if file is compatible with processor
+
+    if(strcmp(signature, GENUINE_SIGNATURE)){
+        DEBUG cout << "Bad signature! signature = |" << signature << "|" << endl;
+        return BAD_SIGNATURE;
+    }
+    if(version != GENUINE_VERSION){
+        DEBUG cout << "Bad version! version = |" << version << "|" << endl;
+        return BAD_VERSION;
+    }
+
+
+    // Creating an array with commands
     try{
-        cmd_in_line = new char [file_size];
+        cmd_sequence = new double [n_cmds];
     }
     catch(const std::bad_alloc& ex){
-        cout << ERR_WHERE << ". Cannot allocate " << file_size << " bytes." << endl;
+        cout << ERR_WHERE << ". Cannot allocate " << n_cmds << " bytes." << endl;
         return BAD_ALLOC;
     }
 
-    /*
-    rewind(input);
-    int n_chars = fread(cmd_in_line, sizeof(char), file_size, input);
-
-    // Parsing buffer
-    char signature[] = "NOSIGNATURE";
-    int  version     = -1;
-    sscanf(cmd_in_line, "%s %d", signature, &version);
-
-    if(strcmp(signature, GENUINE_SIGNATURE)){
-        DEBUG cout << "Bad signature! signature = |" << signature << "|" << endl;
-        return BAD_SIGNATURE;
-    }
-    if(version != GENUINE_VERSION){
-        DEBUG cout << "Bad version! version = |" << version << "|" << endl;
-        return BAD_VERSION;
-    }
-    */
-
-    rewind(input);
-    char signature[] = "NOSIGNATURE";
-    int  version     = -1;
-    fscanf(input, "%s", signature);
-    fscanf(input, "%d", &version);
-
-    if(strcmp(signature, GENUINE_SIGNATURE)){
-        DEBUG cout << "Bad signature! signature = |" << signature << "|" << endl;
-        return BAD_SIGNATURE;
-    }
-    if(version != GENUINE_VERSION){
-        DEBUG cout << "Bad version! version = |" << version << "|" << endl;
-        return BAD_VERSION;
+    for(int i = 0; i < n_cmds; i++){
+        if(!fscanf(input, "%lg", cmd_sequence + i)){
+            DEBUG cout << "Can not read command!\nLast correct command num = " << i << "." << endl;
+            return READ_ERROR;
+        }
     }
 
-
-
-    // FIND OUT COMMANDS AMOUNT
-
-
-
-    double* cmd = new double [50];
-    int i = 0;
-    while(fscanf(input, "%lg", cmd + i) > 0)
-        i++;
-
-    for(int k = 0; k < i; k++)
-        cout << cmd[k] << endl;
+    return SUCCESS;
 }
 
 
