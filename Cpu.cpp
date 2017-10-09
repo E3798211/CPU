@@ -211,6 +211,7 @@ bool Cpu::Dump()
 }
 
 
+
 int Cpu::UnOp(MyType (*pOperation)(MyType a))
 {
     CPU_ASSERT();

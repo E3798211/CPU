@@ -6,11 +6,11 @@ enum CMDS{
     PUSH = 1,
     POP,
 
-    ADD,    // 3
-    SUB,    // 4
-    DIV,    // 5
-    MUL,    // 6
-    FSQRT,  // 7
+    ADD,        // 3
+    SUB,        // 4
+    DIV,        // 5
+    MUL,        // 6
+    FSQRT,      // 7
 
     UNKNOWN_CMD
 };

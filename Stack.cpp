@@ -183,17 +183,20 @@ int Stack::HashCount()
     long long int check_hash = 0;
     check_hash = check_hash*2 + _size;
     check_hash = check_hash*2 + _n_elem;
+    check_hash = check_hash*2 + (uintptr_t)_stack;
 
     int i = 0;
-    while(i < _size){
-        if      (_stack[i] == EDGE)
-            check_hash = check_hash*2 + EDGE_HASH;
-        else if (_stack[i] == EMPT)
-            check_hash = check_hash*2 + EMPT_HASH;
-        else
-            check_hash = check_hash*2 +  _stack[i];
+    if(_stack != nullptr){
+        while(i < _size){
+            if      (_stack[i] == EDGE)
+                check_hash = check_hash*2 + EDGE_HASH;
+            else if (_stack[i] == EMPT)
+                check_hash = check_hash*2 + EMPT_HASH;
+            else
+                check_hash = check_hash*2 +  _stack[i];
 
-        i++;
+            i++;
+        }
     }
 
     return check_hash;
