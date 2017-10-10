@@ -1,6 +1,22 @@
 #include "Cpu.h"
 
 
+long long int Cpu::HashCount()
+{
+    long long int _hash = 0;
+
+    _hash += (uintptr_t)&st;
+    _hash += (uintptr_t)registers;
+
+    if(registers != nullptr){
+        for(int i = 0; i < 4; i++)
+            _hash += registers[i];
+    }
+
+    return _hash;
+}
+
+
 int Cpu::FileRead(double** cmd_sequence, char* file_name)
 {
     // Exceptions
@@ -226,12 +242,24 @@ int Cpu::PrintStack()
 
 int Cpu::Ok()
 {
+    if(cpu_hash != HashCount())
+        return CPU_HASH_WRONG;
+
     return Cpu::st.Ok();
 }
 
-bool Cpu::Dump()
+bool Cpu::Dump(const char* func_name, int err_code)
 {
-    return Cpu::st.Dump("Cpu::Dump");
+    cout << endl;
+    cout << "Dump() in " << func_name << "():" << endl;
+
+    if(err_code != CPU_HASH_WRONG){
+        cout << "registers[0] = " << registers[0] << endl;
+        cout << "registers[1] = " << registers[1] << endl;
+        cout << "registers[2] = " << registers[2] << endl;
+        cout << "registers[3] = " << registers[3] << endl;
+    }
+    return Cpu::st.Dump("Cpu::Dump", err_code);
 }
 
 

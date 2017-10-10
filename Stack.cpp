@@ -215,7 +215,7 @@ int Stack::Ok()
         return SCOND_EDGE_BROKEN;
 
     if(_hash != HashCount())
-        return HASH_WRONG;
+        return STACK_HASH_WRONG;
 
     return SUCCESS;
 }
@@ -235,7 +235,7 @@ bool Stack::Dump(const char* func_name, int err_code)
         case SCOND_EDGE_BROKEN:
             cout << "!!! EDGE BROKEN"   << endl;
             break;
-        case HASH_WRONG:
+        case STACK_HASH_WRONG:
             cout << "!!! WRONG HASH"    << endl;
             break;
     }

@@ -29,10 +29,23 @@
 class Cpu {
 private:
     Stack st;
+    double registers[4];
+
+    long long int cpu_hash = 0;
+
+    /// Hash-count
+    long long int HashCount();
 
 public:
     /// Cpu constructor
-    Cpu() {};
+    Cpu()
+    {
+        registers[0] = 0;
+        registers[1] = 0;
+        registers[2] = 0;
+        registers[3] = 0;
+        cpu_hash = HashCount();
+    };
 
 
     /// Reads file with commands.
@@ -81,7 +94,7 @@ public:
     /**
         Returns TRUE if Dump() printed maximum info, FALSE otherwise (some error happened).
     */
-    bool Dump();
+    bool Dump(const char* func_name = __func__, int err_code = 0);
 
 
     /// Unary operion
