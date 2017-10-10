@@ -1,6 +1,8 @@
 #ifndef CPU_H_INCLUDED
 #define CPU_H_INCLUDED
 
+#include "CpuProperties.h"
+
 #include "Stack.h"
 #include "Errors.h"
 #include "Commands.h"
@@ -21,13 +23,7 @@
     }
 
 
-//const char WRONG_SIGNATURE[]    = "WRONGSIGNATURE";
 
-
-#define WRONG_SIGNATURE "WRONGSIGNATURE"
-const int  WRONG_VERSION        = -1;
-const char GENUINE_SIGNATURE[]  = "EK";
-const int  GENUINE_VERSION      = 1;
 
 
 class Cpu {
@@ -42,11 +38,12 @@ public:
     /// Reads file with commands.
     /**
         Returns error code.
+        \warning Pointer cmd_sequence will be changed inside!
 
         \param [in, out]    cmd_sequence    Array with commands' numbers. Last num is always (-1).
         \param [in]         filename        Name of the file with compiled code.
     */
-    int FileRead(double* &cmd_sequence, char* filename);
+    int FileRead(double** cmd_sequence, char* filename);
 
 
     /// Run. Calls execute() in a loop.

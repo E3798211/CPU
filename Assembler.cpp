@@ -18,78 +18,67 @@ int FileRead(char* file_name1, char* file_name2)
         return FILE_NOT_FOUND;
     }
 
-
-
-    if(fseek(input, 0, SEEK_END)){
-        DEBUG cout << "Can not set last position in " << file_name1 << endl;
-        return FILE_POS_ERROR;
-    }
-
-    int file_size = ftell(input);
-    if(file_size == EOF){
-        cout << "Can not get pointer's position in " << file_name1 << endl;
-        return FILE_POS_ERROR;
-    }
-
     // Reading from input
     char   cmd[128] = "NOCOMMAND";
     double num      = -1;
+
+    double ram[RAM_SIZE] = {0};     //  ?
     int    n_cmd    = 0;
 
-    // Empty string is left first - it will be filled at the end when we know amount of commands
-    fprintf(output, "%s", "                     \n");
 
     rewind(input);
     while(fscanf(input, "%s", cmd) > 0){
-        if      (!strcmp(cmd, CPUSH)){
-            if(fscanf(input, "%lg", &num) == 0){
-                DEBUG cout << "Expected numeric symbol on " << /*ftell(input)*/n_cmd << " position." << endl;
-                return FATAL_ERROR;
-            }
-            fprintf(output, "%d %lg\n", PUSH, num);
-            n_cmd++;
 
-        }else if(!strcmp(cmd, CPOP)){
-            /*
-            if(fscanf(input, "%lg", &num) == 0){
-                DEBUG cout << "Expected numeric symbol on " << /n_cmd << " position." << endl;
-                return FATAL_ERROR;
-            }
-            */
-            fprintf(output, "%d\n", POP);
-            /*
-            n_cmd++;
-            */
-
-        }else if(!strcmp(cmd, CADD)){
-            fprintf(output, "%d\n", ADD);
-        }else if(!strcmp(cmd, CSUB)){
-            fprintf(output, "%d\n", SUB);
-        }else if(!strcmp(cmd, CDIV)){
-            fprintf(output, "%d\n", DIV);
-        }else if(!strcmp(cmd, CMUL)){
-            fprintf(output, "%d\n", MUL);
-        }else if(!strcmp(cmd, CFSQRT)){
-            fprintf(output, "%d\n", FSQRT);
-        }else if(!strcmp(cmd, CEND)){
-            fprintf(output, "%d\n", END);
-        }else{
-            DEBUG cout << "Oops" << endl;
-            return FATAL_ERROR;
+        if(n_cmd >= RAM_SIZE){
+            DEBUG cout << "Too much commands for the processor." << endl;
+            return OVERFLOWN;
         }
 
-        //cout << "11" << endl;
-        n_cmd++;
+
+        if      (!strcmp(cmd, CPUSH)){
+            if(fscanf(input, "%lg", &num) == 0){
+                DEBUG cout << "Expected numeric symbol as " << n_cmd << " command." << endl;
+                return FATAL_ERROR;
+            }
+            ram[n_cmd++] = PUSH;
+            ram[n_cmd++] = num;
+
+        }else if(!strcmp(cmd, CPOP)){
+            ram[n_cmd++] = POP;
+        }else if(!strcmp(cmd, CADD)){
+            ram[n_cmd++] = ADD;
+        }else if(!strcmp(cmd, CSUB)){
+            ram[n_cmd++] = SUB;
+        }else if(!strcmp(cmd, CDIV)){
+            ram[n_cmd++] = DIV;
+        }else if(!strcmp(cmd, CMUL)){
+            ram[n_cmd++] = MUL;
+        }else if(!strcmp(cmd, CFSQRT)){
+            ram[n_cmd++] = FSQRT;
+        }else if(!strcmp(cmd, CSIN)){
+            ram[n_cmd++] = SIN;
+        }else if(!strcmp(cmd, CCOS)){
+            ram[n_cmd++] = COS;
+        }else if(!strcmp(cmd, COUT)){
+            ram[n_cmd++] = OUT;
+        }else if(!strcmp(cmd, CIN)){
+            ram[n_cmd++] = IN;
+
+
+        }else if(!strcmp(cmd, CEND)){
+            ram[n_cmd++] = END;
+        }else{
+            DEBUG cout << "Invalid syntax: " << cmd << endl;
+            return FATAL_ERROR;
+        }
     }
 
-    //Writing first line
-    fseek(output, 0, SEEK_SET);
+    fprintf(output, "%s %d %d\n", GENUINE_SIGNATURE, GENUINE_VERSION, n_cmd);
+    for(int i = 0; i < n_cmd; i++)
+        fprintf(output, "%lg\n", ram[i]);
 
-
-    // VERSION
-
-
-    fprintf(output, "EK %d %d", 1, n_cmd);
+    fclose(input);
+    fclose(output);
 
     return SUCCESS;
 }

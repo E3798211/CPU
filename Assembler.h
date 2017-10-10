@@ -1,6 +1,7 @@
 #ifndef ASSEMBLER_H_INCLUDED
 #define ASSEMBLER_H_INCLUDED
 
+#include "CpuProperties.h"
 
 #include "assert.h"
 #include <cstdio>

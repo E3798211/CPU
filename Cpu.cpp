@@ -1,7 +1,7 @@
 #include "Cpu.h"
 
 
-int Cpu::FileRead(double* &cmd_sequence, char* file_name)
+int Cpu::FileRead(double** cmd_sequence, char* file_name)
 {
     // Exceptions
     assert(file_name != nullptr);
@@ -11,22 +11,6 @@ int Cpu::FileRead(double* &cmd_sequence, char* file_name)
         DEBUG cout << "File not found!" << endl;
         return FILE_NOT_FOUND;
     }
-
-
-    if(fseek(input, 0, SEEK_END)){
-        cout << "Can not set last position in " << file_name << endl;
-        return FILE_POS_ERROR;
-    }
-
-    int file_size = ftell(input);
-    if(file_size == EOF){
-        cout << "Can not get pointer's position in " << file_name << endl;
-        return FILE_POS_ERROR;
-    }
-
-    //fclose(input);
-    //input = fopen(file_name, "r");
-    //cout << "setvbuf = " << setvbuf(input, nullptr, _IOFBF, file_size) << endl;
 
 
     // Reading file's beginning
@@ -65,7 +49,7 @@ int Cpu::FileRead(double* &cmd_sequence, char* file_name)
 
     // Creating an array with commands
     try{
-        cmd_sequence = new double [n_cmds];
+        *cmd_sequence = new double [n_cmds];
     }
     catch(const std::bad_alloc& ex){
         cout << ERR_WHERE << ". Cannot allocate " << n_cmds << " doubles." << endl;
@@ -73,7 +57,7 @@ int Cpu::FileRead(double* &cmd_sequence, char* file_name)
     }
 
     for(int i = 0; i < n_cmds; i++){
-        if(!fscanf(input, "%lg", cmd_sequence + i)){
+        if(!fscanf(input, "%lg", (*cmd_sequence) + i)){
             DEBUG cout << "Can not read command!\nLast correct command num = " << i << "." << endl;
             return READ_ERROR;
         }
@@ -89,8 +73,8 @@ int Cpu::Run(char* file_name)
     CPU_ASSERT();
 
     double* cmd_sequence = nullptr;
-    if(Cpu::FileRead(cmd_sequence, file_name) != SUCCESS){
-        DEBUG cout << "Problems with file." << endl;
+    if(Cpu::FileRead(&cmd_sequence, file_name) != SUCCESS){
+        DEBUG cout << "Unexpected problems with file." << endl;
 
         CPU_ASSERT();
         return FILE_ERROR;
@@ -99,6 +83,7 @@ int Cpu::Run(char* file_name)
     int cmd_num = 0;
     while(cmd_sequence[cmd_num] != END){
         cout << "Command num = " << cmd_num << endl;
+        //cout << "\n";
 
         if(Cpu::Execute(cmd_sequence, cmd_num) == UNKNOWN_CMD){
             DEBUG cout << "!!! Unknown command!\n!!! Process terminated." << endl;
@@ -180,7 +165,46 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
             cout << "\nNot enought elements in the stack" << endl;
 
 
-    }else if(cmd_sequence[cmd_num] == END){
+    }else if(cmd_sequence[cmd_num] == SIN){
+
+        int res = Cpu::UnOp([] (MyType a)-> MyType
+                                    {
+                                        return std::sin(a);
+                                    });
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
+
+
+    }else if(cmd_sequence[cmd_num] == COS){
+
+        int res = Cpu::UnOp([] (MyType a)-> MyType
+                                    {
+                                        return std::cos(a);
+                                    });
+        if(res == NOT_ENOUGH_ELEMENTS)
+            cout << "\nNot enought elements in the stack" << endl;
+
+
+    }else if(cmd_sequence[cmd_num] == OUT){
+
+        if(Cpu::st.GetNElem() > 0){
+            cout << "Last elem = " << Cpu::st.GetLastElem() << endl;
+        }else
+            cout << "Stack is empty" << endl;
+
+    }else if(cmd_sequence[cmd_num] == IN){
+
+        double tmp = 0;
+        cout << "Enter: ";
+        if(scanf("%lg", &tmp) > 0)
+            Cpu::st.Push(&tmp);
+        else
+            cout << "Invalid input." << endl;
+    }
+
+
+
+    else if(cmd_sequence[cmd_num] == END){
         return END;
     }else{
         return  UNKNOWN_CMD;

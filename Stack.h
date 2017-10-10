@@ -106,6 +106,9 @@ public:
     /// Gets _n_elem.
     long long int GetNElem();
 
+    /// Gets last element.
+    MyType GetLastElem();
+
 
 
     /// Checks if elem is EDGE.

@@ -176,6 +176,11 @@ long long int Stack::GetNElem()
     return _n_elem;
 }
 
+MyType Stack::GetLastElem()
+{
+    return _stack[_n_elem];
+}
+
 // DEBUG
 
 int Stack::HashCount()

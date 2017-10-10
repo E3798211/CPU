@@ -11,6 +11,11 @@ enum CMDS{
     DIV,        // 5
     MUL,        // 6
     FSQRT,      // 7
+    SIN,        // 8
+    COS,        // 9
+
+    OUT,        // 10
+    IN,         // 11
 
     UNKNOWN_CMD
 };
@@ -22,12 +27,14 @@ enum CMDS{
 #define CSUB     "sub"
 #define CDIV     "div"
 #define CMUL     "mul"
-#define CFSQRT   "FSQRT"
+#define CFSQRT   "fsqrt"
+#define CSIN     "sin"
+#define CCOS     "cos"
+#define COUT     "out"
+#define CIN      "in"
 
 // out  - печать последнего числа
 // in   - ввод с клавиатуры
-// sin
-// cos
 
 // 4 переменные в процессоре -> pop меняется
 // push работает с регистрами - можно поменять номер команды в коде
