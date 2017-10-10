@@ -112,6 +112,11 @@ int Cpu::Run(char* file_name)
         Cpu::PrintStack();
     }
 
+    cout << "At the end:" << endl;
+    Cpu::PrintStack();
+    for(int i = 0; i < 4; i++)
+        cout << "reg[" << i << "] = " << registers[i] << endl;
+
     CPU_ASSERT();
 
     return SUCCESS;
@@ -124,7 +129,36 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
     if      (cmd_sequence[cmd_num] == PUSH){
 
         cmd_num++;
+        /*
         Cpu::st.Push(&cmd_sequence[cmd_num]);
+        */
+        if(cmd_sequence[cmd_num] == PUSH_TO_STK){
+            cmd_num++;
+            Cpu::st.Push(&cmd_sequence[cmd_num]);
+        }else{
+            cmd_num++;
+
+            int reg_num = -1;
+            if      (cmd_sequence[cmd_num] == AX)     reg_num = 0;
+            else if (cmd_sequence[cmd_num] == BX)     reg_num = 1;
+            else if (cmd_sequence[cmd_num] == CX)     reg_num = 2;
+            else if (cmd_sequence[cmd_num] == DX)     reg_num = 3;
+
+            if(reg_num < 0){
+                DEBUG cout << "Unknown command " << cmd_sequence[cmd_num] << endl;
+                return UNKNOWN_CMD;
+            }
+
+            double tmp = 0;
+            if(Cpu::st.Pop(&tmp) == SUCCESS){
+                Cpu::registers[reg_num] = tmp;
+                cpu_hash = HashCount();
+            }else{
+                DEBUG cout << "Nothing have been pushed in register." << endl;
+            }
+
+        }
+
 
     }else if(cmd_sequence[cmd_num] == POP){
 
@@ -223,6 +257,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
     else if(cmd_sequence[cmd_num] == END){
         return END;
     }else{
+        DEBUG cout << "Unknown command " << cmd_sequence[cmd_num] << endl;
         return  UNKNOWN_CMD;
     }
 

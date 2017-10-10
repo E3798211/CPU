@@ -36,12 +36,52 @@ int FileRead(char* file_name1, char* file_name2)
 
 
         if      (!strcmp(cmd, CPUSH)){
+            /*
             if(fscanf(input, "%lg", &num) == 0){
                 DEBUG cout << "Expected numeric symbol as " << n_cmd << " command." << endl;
                 return FATAL_ERROR;
             }
             ram[n_cmd++] = PUSH;
             ram[n_cmd++] = num;
+            */
+
+            int push_where = 0;
+
+            if(fscanf(input, "%lg", &num) == 0){
+                if(fscanf(input, "%s", cmd) == 0){
+                    DEBUG cout << "Invalid syntax: " << cmd << endl;
+                    return FATAL_ERROR;
+                }else{
+                    if      (!strcmp(cmd, CAX))   push_where = AX;
+                    else if (!strcmp(cmd, CBX))   push_where = BX;
+                    else if (!strcmp(cmd, CCX))   push_where = CX;
+                    else if (!strcmp(cmd, CDX))   push_where = DX;
+                    else                          push_where = WRONG_COMMAND;
+
+                    if(push_where == WRONG_COMMAND){
+                        DEBUG cout << "Invalid syntax: " << cmd << endl;
+                        return FATAL_ERROR;
+                    }
+
+                    // if we are here everything is ok
+
+                    ram[n_cmd++] = PUSH;
+                    ram[n_cmd++] = PUSH_TO_REG;
+
+                    if      (push_where == AX)    ram[n_cmd++] = AX;
+                    else if (push_where == BX)    ram[n_cmd++] = BX;
+                    else if (push_where == CX)    ram[n_cmd++] = CX;
+                    else if (push_where == DX)    ram[n_cmd++] = DX;
+                }
+            }else{
+                ram[n_cmd++] = PUSH;
+                ram[n_cmd++] = PUSH_TO_STK;
+                ram[n_cmd++] = num;
+            }
+
+
+
+
 
         }else if(!strcmp(cmd, CPOP)){
             ram[n_cmd++] = POP;
