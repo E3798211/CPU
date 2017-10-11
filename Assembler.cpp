@@ -80,11 +80,36 @@ int FileRead(char* file_name1, char* file_name2)
             }
 
 
-
-
-
         }else if(!strcmp(cmd, CPOP)){
+            //ram[n_cmd++] = POP;
+            if(fscanf(input, "%s", cmd) == 0){
+                DEBUG cout << "Invalid syntax: " << cmd << endl;
+                return FATAL_ERROR;
+            }
+
+            int push_where = 0;
+
+            if      (!strcmp(cmd, CAX))   push_where = AX;
+            else if (!strcmp(cmd, CBX))   push_where = BX;
+            else if (!strcmp(cmd, CCX))   push_where = CX;
+            else if (!strcmp(cmd, CDX))   push_where = DX;
+            else                          push_where = WRONG_COMMAND;
+
+            if(push_where == WRONG_COMMAND){
+                DEBUG cout << "Invalid syntax: " << cmd << endl;
+                return FATAL_ERROR;
+            }
+
+            // if we are here everything is ok
+
             ram[n_cmd++] = POP;
+
+            if      (push_where == AX)    ram[n_cmd++] = AX;
+            else if (push_where == BX)    ram[n_cmd++] = BX;
+            else if (push_where == CX)    ram[n_cmd++] = CX;
+            else if (push_where == DX)    ram[n_cmd++] = DX;
+
+
         }else if(!strcmp(cmd, CADD)){
             ram[n_cmd++] = ADD;
         }else if(!strcmp(cmd, CSUB)){

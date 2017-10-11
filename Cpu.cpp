@@ -149,21 +149,43 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
                 return UNKNOWN_CMD;
             }
 
-            double tmp = 0;
+            /*
             if(Cpu::st.Pop(&tmp) == SUCCESS){
                 Cpu::registers[reg_num] = tmp;
                 cpu_hash = HashCount();
             }else{
                 DEBUG cout << "Nothing have been pushed in register." << endl;
             }
-
+            */
+            Cpu::st.Push(registers + reg_num);
+            cpu_hash = HashCount();
         }
 
 
     }else if(cmd_sequence[cmd_num] == POP){
 
         cmd_num++;
+        /*
         Cpu::st.Pop(&cmd_sequence[cmd_num]);
+        */
+        int reg_num = -1;
+        if      (cmd_sequence[cmd_num] == AX)     reg_num = 0;
+        else if (cmd_sequence[cmd_num] == BX)     reg_num = 1;
+        else if (cmd_sequence[cmd_num] == CX)     reg_num = 2;
+        else if (cmd_sequence[cmd_num] == DX)     reg_num = 3;
+
+        if(reg_num < 0){
+            DEBUG cout << "Unknown command " << cmd_sequence[cmd_num] << endl;
+            return UNKNOWN_CMD;
+        }
+
+        double tmp = -1;
+        if(Cpu::st.Pop(&tmp) == SUCCESS){
+            Cpu::registers[reg_num] = tmp;
+            cpu_hash = HashCount();
+        }else{
+            DEBUG cout << "Nothing have been pushed in register." << endl;
+        }
 
     }else if(cmd_sequence[cmd_num] == ADD){
 
