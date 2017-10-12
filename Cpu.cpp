@@ -98,7 +98,7 @@ int Cpu::Run(char* file_name)
 
     int cmd_num = 0;
     while(cmd_sequence[cmd_num] != END){
-        cout << "Command num = " << cmd_num << endl;
+        //cout << "Command num = " << cmd_num << endl;
         //cout << "\n";
 
         if(Cpu::Execute(cmd_sequence, cmd_num) == UNKNOWN_CMD){
@@ -109,13 +109,13 @@ int Cpu::Run(char* file_name)
         }
         cmd_num++;
 
-        Cpu::PrintStack();
+        //Cpu::PrintStack();
     }
 
-    cout << "At the end:" << endl;
-    Cpu::PrintStack();
-    for(int i = 0; i < 4; i++)
-        cout << "reg[" << i << "] = " << registers[i] << endl;
+    //cout << "At the end:" << endl;
+    //Cpu::PrintStack();
+    //for(int i = 0; i < 4; i++)
+        //cout << "reg[" << i << "] = " << registers[i] << endl;
 
     CPU_ASSERT();
 
