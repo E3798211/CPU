@@ -6,6 +6,7 @@ const int  WRONG_VERSION        = -1;
 const char GENUINE_SIGNATURE[]  = "EK";
 const int  GENUINE_VERSION      = 2;
 
-const int RAM_SIZE    = 1024;
+const int RAM_SIZE   = 1024;
+const int LABELS_MAX = 1000;
 
 #endif // CPUPROPERTIES_H_INCLUDED

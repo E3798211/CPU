@@ -65,5 +65,9 @@ const int PUSH_TO_STK = 0;
 #define CJBE     "jbe"
 
 
+// =====================
+// ASM - only
+
+#define CLABEL   "label"
 
 #endif // COMMANDS_H_INCLUDED

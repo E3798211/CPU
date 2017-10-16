@@ -24,11 +24,18 @@
 
 //=================================================================
 
+
+struct Label {
+    int  place     = -1;
+    char name[128] = "NONAME";
+};
+
+
 using std::cin;
 using std::cout;
 using std::endl;
 
 int FileRead(char* file_name1, char* file_name2);
-int Pass(FILE *input, double** ram, int* n_cmd);
+int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num);
 
 #endif // ASSEMBLER_H_INCLUDED
