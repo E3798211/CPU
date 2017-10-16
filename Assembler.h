@@ -29,6 +29,6 @@ using std::cout;
 using std::endl;
 
 int FileRead(char* file_name1, char* file_name2);
-
+int Pass(FILE *input, double** ram, int* n_cmd);
 
 #endif // ASSEMBLER_H_INCLUDED

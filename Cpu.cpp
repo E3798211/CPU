@@ -103,6 +103,7 @@ int Cpu::Run(char* file_name)
 
         if(Cpu::Execute(cmd_sequence, cmd_num) == UNKNOWN_CMD){
             DEBUG cout << "!!! Unknown command!\n!!! Process terminated." << endl;
+            DEBUG cout << "cmd_num = " << cmd_num << endl;
 
             CPU_ASSERT();
             return FATAL_ERROR;
@@ -113,7 +114,7 @@ int Cpu::Run(char* file_name)
     }
 
     //cout << "At the end:" << endl;
-    //Cpu::PrintStack();
+    Cpu::PrintStack();
     //for(int i = 0; i < 4; i++)
         //cout << "reg[" << i << "] = " << registers[i] << endl;
 
@@ -272,6 +273,54 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
             Cpu::st.Push(&tmp);
         else
             cout << "Invalid input." << endl;
+
+    }else if(cmd_sequence[cmd_num] == JE){
+        cout << "je\n";
+        cmd_num++;
+        Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
+                                                        {
+                                                            return (a == b);
+                                                        });
+    }else if(cmd_sequence[cmd_num] == JNE){
+        cout << "jne\n";
+        cmd_num++;
+        Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
+                                                        {
+                                                            return (a != b);
+                                                        });
+
+    }else if(cmd_sequence[cmd_num] == JA){
+        cout << "ja\n";
+        cmd_num++;
+        Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
+                                                        {
+                                                            return (a > b);
+                                                        });
+
+    }else if(cmd_sequence[cmd_num] == JAE){
+        cout << "jae\n";
+        cmd_num++;
+        Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
+                                                        {
+                                                            return (a >= b);
+                                                        });
+
+    }else if(cmd_sequence[cmd_num] == JB){
+        cout << "jb\n";
+        cmd_num++;
+        Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
+                                                        {
+                                                            return (a < b);
+                                                        });
+
+    }else if(cmd_sequence[cmd_num] == JBE){
+        cout << "jbe\n";
+        cmd_num++;
+        Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
+                                                        {
+                                                            return (a <= b);
+                                                        });
+
     }
 
 
@@ -362,4 +411,26 @@ int Cpu::BinOp(MyType (*pOperation)(MyType a, MyType b))
 
     return SUCCESS;
 }
+
+int Cpu::Jmp(int* cmd_num, int jmp_to, bool (*pCompare)(MyType a, MyType b))
+{
+    CPU_ASSERT();
+
+    MyType first  = 0;
+    MyType second = 0;
+
+    Cpu::st.Pop(&first);
+    Cpu::st.Pop(&second);
+
+    if(pCompare(second, first)){
+        *(cmd_num) = jmp_to - 1;    // Because in the end of the loop command num will be incremented
+         cout << "jumped to " << jmp_to << endl;
+    }
+
+
+    CPU_ASSERT();
+
+    return SUCCESS;
+}
+
 

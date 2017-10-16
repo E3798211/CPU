@@ -109,6 +109,13 @@ public:
     */
     int BinOp(MyType (*pOperation)(MyType a, MyType b));
 
+    /// Jump
+    /**
+        \param [in] *(pCompare)(MyType a, MyType b)     Pointer to function that checks if condition is correst
+        \param [in] cmd_num     Varriable responsible for next command
+        \param [in] jmp_to      Jump to new command
+    */
+    int Jmp(int* cmd_num, int jmp_to, bool (*pCompare)(MyType a, MyType b));
 };
 
 

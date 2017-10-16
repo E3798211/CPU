@@ -24,6 +24,13 @@ enum CMDS{
     CX,         // 14
     DX,         // 15
 
+    JE,         // 16   ==
+    JNE,        // 17   !=
+    JA,         // 18   >
+    JAE,        // 19   >=
+    JB,         // 20   <
+    JBE,        // 21   <=
+
     UNKNOWN_CMD
 };
 
@@ -31,6 +38,7 @@ const int PUSH_TO_REG = 1;
 const int PUSH_TO_STK = 0;
 
 #define CEND     "end"
+
 #define CPUSH    "push"
 #define CPOP     "pop"
 #define CADD     "add"
@@ -40,18 +48,22 @@ const int PUSH_TO_STK = 0;
 #define CFSQRT   "fsqrt"
 #define CSIN     "sin"
 #define CCOS     "cos"
+
 #define COUT     "out"
 #define CIN      "in"
-#define CAX       "ax"
-#define CBX       "bx"
-#define CCX       "cx"
-#define CDX       "dx"
+
+#define CAX      "ax"
+#define CBX      "bx"
+#define CCX      "cx"
+#define CDX      "dx"
+
+#define CJE      "je"
+#define CJNE     "jne"
+#define CJA      "ja"
+#define CJAE     "jae"
+#define CJB      "jb"
+#define CJBE     "jbe"
 
 
-
-// 4 переменные в процессоре -> pop меняется
-// push работает с регистрами - можно поменять номер команды в коде
-// push 5   ==  1 0 5
-// push dx  ==  1 1 4
 
 #endif // COMMANDS_H_INCLUDED
