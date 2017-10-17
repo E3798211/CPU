@@ -4,7 +4,7 @@
 #define WRONG_SIGNATURE "WRONGSIGNATURE"
 const int  WRONG_VERSION        = -1;
 const char GENUINE_SIGNATURE[]  = "EK";
-const int  GENUINE_VERSION      = 2;
+const int  GENUINE_VERSION      = 5;
 
 const int RAM_SIZE   = 1024;
 const int LABELS_MAX = 1000;

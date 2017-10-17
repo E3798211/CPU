@@ -1,0 +1,40 @@
+in
+pop ax
+push ax
+pop bx
+push ax
+pop cx
+
+call fact
+
+push bx
+
+out
+
+end
+
+label fact
+
+push cx
+push 1
+
+jne mulnext
+ret
+
+label mulnext
+push cx
+push 1
+
+sub
+
+pop cx
+
+push cx
+push bx
+mul
+
+pop bx
+
+call fact
+
+ret

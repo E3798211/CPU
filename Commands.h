@@ -31,6 +31,9 @@ enum CMDS{
     JB,         // 20   <
     JBE,        // 21   <=
 
+    CALL,       // 22
+    RET,        // 23
+
     UNKNOWN_CMD
 };
 
@@ -64,6 +67,8 @@ const int PUSH_TO_STK = 0;
 #define CJB      "jb"
 #define CJBE     "jbe"
 
+#define CCALL    "call"
+#define CRET     "ret"
 
 // =====================
 // ASM - only

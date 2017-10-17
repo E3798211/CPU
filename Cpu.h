@@ -1,6 +1,10 @@
 #ifndef CPU_H_INCLUDED
 #define CPU_H_INCLUDED
 
+
+#include <cstdlib>
+
+
 #include "CpuProperties.h"
 
 #include "Stack.h"
@@ -29,6 +33,8 @@
 class Cpu {
 private:
     Stack st;
+    Stack call_st;
+
     double registers[4];
 
     long long int cpu_hash = 0;

@@ -35,10 +35,15 @@ int FileRead(char* file_name1, char* file_name2)
     if(err != SUCCESS)
         return err;
 
+    rewind(input);
+    n_cmd = 0;
+    label_num = 0;
+
         err = Pass(input, &ram, &n_cmd, &labels, &label_num);
     if(err != SUCCESS)
         return err;
     // =================================
+
 
     /*
     for(int i = 0; i < label_num; i++){
@@ -47,9 +52,11 @@ int FileRead(char* file_name1, char* file_name2)
     }
     */
 
+
     fprintf(output, "%s %d %d\n", GENUINE_SIGNATURE, GENUINE_VERSION, n_cmd);
-    for(int i = 0; i < n_cmd; i++)
+    for(int i = 0; i < n_cmd; i++){
         fprintf(output, "%lg\n", ram[i]);
+    }
 
     fclose(input);
     fclose(output);
@@ -214,19 +221,48 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
             }
 
         }else if(!strcmp(cmd, CLABEL)){
-            if(*label_num >= LABELS_MAX - 2)
+            if(*label_num >= LABELS_MAX - 2){
                 cout << "Too much labels." << endl;
+                return FATAL_ERROR;
+            }
 
             if(fscanf(input, "%s", cmd)){
-                strcpy(((*labels)[(*label_num)]).name, cmd);
-                ((*labels)[(*label_num)]).place = *n_cmd;
+                bool already_exist = false;
 
-                (*label_num)++;
+                for(int i = 0; i < *label_num; i++){
+                    if(strcmp(((*labels)[(*label_num)]).name, cmd) == 0)
+                        already_exist = true;
+                }
 
+                if(!already_exist){
+                    strcpy(((*labels)[(*label_num)]).name, cmd);
+                    ((*labels)[(*label_num)]).place = *n_cmd;
+                }
+                    (*label_num)++;
             }else{
                 cout << "Unexpected problem on " << *n_cmd << " position" << endl;
                 return FATAL_ERROR;
             }
+
+
+        }else if(!strcmp(cmd, CCALL)){
+            if(fscanf(input, "%s", cmd) > 0){
+                (*ram)[(*n_cmd)++] = CALL;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
+                /*
+                if(LabelInsert(cmd, *labels, *label_num, *ram, n_cmd) == LABEL_DO_NOT_EXIST)
+                    cout << "NU EBANY V ROT" << endl;
+                else
+                    cout << "NU OK" << endl;
+                */
+
+            }else{
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
+                return FATAL_ERROR;
+            }
+        }else if(!strcmp(cmd, CRET)){
+            (*ram)[(*n_cmd)++] = RET;
+
 
 
         }else if(!strcmp(cmd, CEND)){
@@ -239,6 +275,8 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
 
     return SUCCESS;
 }
+
+
 
 
 int FindLabel(char* name, Label* labels, int n_labels)
@@ -262,6 +300,7 @@ int LabelInsert(char* name, Label* labels, int n_labels, double* ram, int* n_cmd
         return LABEL_DO_NOT_EXIST;
     }else{
         ram[(*n_cmd)++] = label_place;
+        //DEBUG cout << "Inserted" << endl;
     }
 
     return SUCCESS;

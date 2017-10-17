@@ -6,6 +6,7 @@ long long int Cpu::HashCount()
     long long int _hash = 0;
 
     _hash += (uintptr_t)&st;
+    _hash += (uintptr_t)&call_st;
     _hash += (uintptr_t)registers;
 
     if(registers != nullptr){
@@ -109,6 +110,7 @@ int Cpu::Run(char* file_name)
             return FATAL_ERROR;
         }
         cmd_num++;
+        //cin.get();
 
         //Cpu::PrintStack();
     }
@@ -150,14 +152,6 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
                 return UNKNOWN_CMD;
             }
 
-            /*
-            if(Cpu::st.Pop(&tmp) == SUCCESS){
-                Cpu::registers[reg_num] = tmp;
-                cpu_hash = HashCount();
-            }else{
-                DEBUG cout << "Nothing have been pushed in register." << endl;
-            }
-            */
             Cpu::st.Push(registers + reg_num);
             cpu_hash = HashCount();
         }
@@ -275,14 +269,14 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
             cout << "Invalid input." << endl;
 
     }else if(cmd_sequence[cmd_num] == JE){
-        cout << "je\n";
+        //cout << "je\n";
         cmd_num++;
         Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
                                                         {
                                                             return (a == b);
                                                         });
     }else if(cmd_sequence[cmd_num] == JNE){
-        cout << "jne\n";
+        //cout << "jne\n";
         cmd_num++;
         Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
                                                         {
@@ -290,7 +284,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
                                                         });
 
     }else if(cmd_sequence[cmd_num] == JA){
-        cout << "ja\n";
+        //cout << "ja\n";
         cmd_num++;
         Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
                                                         {
@@ -298,7 +292,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
                                                         });
 
     }else if(cmd_sequence[cmd_num] == JAE){
-        cout << "jae\n";
+        //cout << "jae\n";
         cmd_num++;
         Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
                                                         {
@@ -306,7 +300,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
                                                         });
 
     }else if(cmd_sequence[cmd_num] == JB){
-        cout << "jb\n";
+        //cout << "jb\n";
         cmd_num++;
         Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
                                                         {
@@ -314,13 +308,24 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
                                                         });
 
     }else if(cmd_sequence[cmd_num] == JBE){
-        cout << "jbe\n";
+        //cout << "jbe\n";
         cmd_num++;
         Cpu::Jmp(&cmd_num, cmd_sequence[cmd_num], [] (MyType a, MyType b)
                                                         {
                                                             return (a <= b);
                                                         });
 
+    }else if(cmd_sequence[cmd_num] == CALL){
+        double tmp = cmd_num + 2;
+        call_st.Push(&tmp);                     // Remembering place where we should return return
+
+        cmd_num++;
+        cmd_num = cmd_sequence[cmd_num] - 1;    // (-1) because in the end of the loop cmd_num will be incremented
+
+    }else if(cmd_sequence[cmd_num] == RET){
+        double tmp = cmd_num;
+        call_st.Pop(&tmp);
+        cmd_num = tmp - 1;    // (-1) because in the end of the loop cmd_num will be incremented
     }
 
 
@@ -424,7 +429,7 @@ int Cpu::Jmp(int* cmd_num, int jmp_to, bool (*pCompare)(MyType a, MyType b))
 
     if(pCompare(second, first)){
         *(cmd_num) = jmp_to - 1;    // Because in the end of the loop command num will be incremented
-         cout << "jumped to " << jmp_to << endl;
+         //cout << "jumped to " << jmp_to << endl;
     }
 
 
