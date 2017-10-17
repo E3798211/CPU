@@ -38,4 +38,14 @@ using std::endl;
 int FileRead(char* file_name1, char* file_name2);
 int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num);
 
+/// Finds label with specified name
+/**
+    \param [in] name        Name of the label
+    \param [in] labels      Array with labels
+    \param [in] n_labels    Amount of labels in array
+*/
+int FindLabel(char* name, Label* labels, int n_labels);
+
+int LabelInsert(char* name, Label* labels, int n_labels, double* ram, int* n_cmd);
+
 #endif // ASSEMBLER_H_INCLUDED

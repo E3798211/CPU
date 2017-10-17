@@ -2,6 +2,7 @@
 #define ERRORS_H_INCLUDED
 
 enum ERR_CODE{
+    LABEL_DO_NOT_EXIST = -2,
     FATAL_ERROR = -1,
     SUCCESS     = 0,
     BAD_ALLOC,

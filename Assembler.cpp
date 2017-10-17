@@ -34,12 +34,18 @@ int FileRead(char* file_name1, char* file_name2)
     int err = Pass(input, &ram, &n_cmd, &labels, &label_num);
     if(err != SUCCESS)
         return err;
+
+        err = Pass(input, &ram, &n_cmd, &labels, &label_num);
+    if(err != SUCCESS)
+        return err;
     // =================================
 
+    /*
     for(int i = 0; i < label_num; i++){
         cout << "label[" << i << "].name = "  << labels[i].name  << endl;
         cout << "label[" << i << "].place = " << labels[i].place << endl;
     }
+    */
 
     fprintf(output, "%s %d %d\n", GENUINE_SIGNATURE, GENUINE_VERSION, n_cmd);
     for(int i = 0; i < n_cmd; i++)
@@ -154,49 +160,60 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
             (*ram)[(*n_cmd)++] = IN;
 
         }else if(!strcmp(cmd, CJE)){
-            if(fscanf(input, "%lg", &num)){
+            if(fscanf(input, "%s", cmd) > 0){
                 (*ram)[(*n_cmd)++] = JE;
-                (*ram)[(*n_cmd)++] = num;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
             }else{
-                DEBUG cout << "Expected num as " << *n_cmd << " command" << endl;
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
                 return FATAL_ERROR;
             }
 
         }else if(!strcmp(cmd, CJNE)){
-            if(fscanf(input, "%lg", &num)){
+            if(fscanf(input, "%s", cmd) > 0){
                 (*ram)[(*n_cmd)++] = JNE;
-                (*ram)[(*n_cmd)++] = num;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
             }else{
-                DEBUG cout << "Expected num as " << *n_cmd << " command" << endl;
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
                 return FATAL_ERROR;
             }
+
+        }else if(!strcmp(cmd, CJA)){
+            if(fscanf(input, "%s", cmd) > 0){
+                (*ram)[(*n_cmd)++] = JA;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
+            }else{
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
+                return FATAL_ERROR;
+            }
+
         }else if(!strcmp(cmd, CJAE)){
-            if(fscanf(input, "%lg", &num)){
+            if(fscanf(input, "%s", cmd) > 0){
                 (*ram)[(*n_cmd)++] = JAE;
-                (*ram)[(*n_cmd)++] = num;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
             }else{
-                DEBUG cout << "Expected num as " << *n_cmd << " command" << endl;
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
                 return FATAL_ERROR;
             }
+
         }else if(!strcmp(cmd, CJB)){
-            if(fscanf(input, "%lg", &num)){
+            if(fscanf(input, "%s", cmd) > 0){
                 (*ram)[(*n_cmd)++] = JB;
-                (*ram)[(*n_cmd)++] = num;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
             }else{
-                DEBUG cout << "Expected num as " << *n_cmd << " command" << endl;
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
                 return FATAL_ERROR;
             }
+
         }else if(!strcmp(cmd, CJBE)){
-            if(fscanf(input, "%lg", &num)){
+            if(fscanf(input, "%s", cmd) > 0){
                 (*ram)[(*n_cmd)++] = JBE;
-                (*ram)[(*n_cmd)++] = num;
+                LabelInsert(cmd, *labels, *label_num, *ram, n_cmd);
             }else{
-                DEBUG cout << "Expected num as " << *n_cmd << " command" << endl;
+                DEBUG cout << "Expected label's name as " << *n_cmd << " command" << endl;
                 return FATAL_ERROR;
             }
 
         }else if(!strcmp(cmd, CLABEL)){
-            //(*ram)[(*n_cmd)++] = COS;
             if(*label_num >= LABELS_MAX - 2)
                 cout << "Too much labels." << endl;
 
@@ -205,8 +222,6 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
                 ((*labels)[(*label_num)]).place = *n_cmd;
 
                 (*label_num)++;
-
-                (*n_cmd) += 2;
 
             }else{
                 cout << "Unexpected problem on " << *n_cmd << " position" << endl;
@@ -220,6 +235,33 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
             DEBUG cout << "Invalid syntax: " << cmd << endl;
             return FATAL_ERROR;
         }
+    }
+
+    return SUCCESS;
+}
+
+
+int FindLabel(char* name, Label* labels, int n_labels)
+{
+    int label_num = 0;
+    while(label_num <= n_labels){
+        if(!strcmp(labels[label_num].name, name))
+            return labels[label_num].place;
+
+        label_num++;
+    }
+    return LABEL_DO_NOT_EXIST;
+}
+
+int LabelInsert(char* name, Label* labels, int n_labels, double* ram, int* n_cmd)
+{
+    int label_place = FindLabel(name, labels, n_labels);
+    if(label_place == LABEL_DO_NOT_EXIST){
+        ram[(*n_cmd)++] = *n_cmd;
+        //DEBUG cout << "Label \"" << name << "\" does not exist" << endl;
+        return LABEL_DO_NOT_EXIST;
+    }else{
+        ram[(*n_cmd)++] = label_place;
     }
 
     return SUCCESS;
