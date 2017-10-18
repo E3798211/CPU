@@ -6,8 +6,11 @@
 
 int main()
 {
+
     FileRead("4.txt", "3.txt");
+
 
     Cpu cpu;
     cpu.Run("3.txt");
 }
+

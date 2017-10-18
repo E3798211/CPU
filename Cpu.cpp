@@ -263,10 +263,12 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 
         double tmp = 0;
         cout << "Enter: ";
-        if(scanf("%lg", &tmp) > 0)
-            Cpu::st.Push(&tmp);
-        else
+        while(scanf("%lg", &tmp) == 0){
             cout << "Invalid input." << endl;
+            //getchar();
+            //getchar();
+        }
+        Cpu::st.Push(&tmp);
 
     }else if(cmd_sequence[cmd_num] == JE){
         //cout << "je\n";

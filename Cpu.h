@@ -36,6 +36,7 @@ private:
     Stack call_st;
 
     double registers[4];
+    double ram[RAM_SIZE];
 
     long long int cpu_hash = 0;
 

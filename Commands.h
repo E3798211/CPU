@@ -39,6 +39,7 @@ enum CMDS{
 
 const int PUSH_TO_REG = 1;
 const int PUSH_TO_STK = 0;
+const int PUSH_TO_RAM = 3;
 
 #define CEND     "end"
 

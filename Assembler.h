@@ -45,7 +45,11 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num);
     \param [in] n_labels    Amount of labels in array
 */
 int FindLabel(char* name, Label* labels, int n_labels);
-
 int LabelInsert(char* name, Label* labels, int n_labels, double* ram, int* n_cmd);
+
+bool IsInBrackets(char* cmd);
+bool IsRegister(char* cmd);
+bool IsNum(char* cmd);
+int  WichReg(char* cmd);
 
 #endif // ASSEMBLER_H_INCLUDED

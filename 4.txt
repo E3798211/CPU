@@ -10,8 +10,10 @@ call fact
 push bx
 
 out
-
 end
+
+
+
 
 label fact
 
@@ -20,6 +22,9 @@ push 1
 
 jne mulnext
 ret
+
+
+
 
 label mulnext
 push cx
@@ -36,5 +41,4 @@ mul
 pop bx
 
 call fact
-
 ret
