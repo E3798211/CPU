@@ -89,6 +89,8 @@ public:
         Returns amount of printed elements.
     */
     int PrintStack();
+    int PrintRegisters();
+    int PrintRam();
 
 
     /// Verificator.

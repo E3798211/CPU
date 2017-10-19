@@ -7,7 +7,7 @@
 int main()
 {
 
-    FileRead("4.txt", "3.txt");
+    FileRead("5.txt", "3.txt");
 
 
     Cpu cpu;

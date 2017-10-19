@@ -114,7 +114,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
                 (*ram)[(*n_cmd)++] = PUSH_TO_STK;
                 (*ram)[(*n_cmd)++] = num;
             }
-            */
+
             //int push_where = 0;
 
             if(fscanf(input, "%s", cmd) != 0){
@@ -124,15 +124,21 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
                     cmd_arg[strlen(cmd) - 2] = '\0';
 
                     if(IsRegister(cmd_arg)){
-                        //
+                        // Register in brackets
+                        // Should be made with POP
+                        // PUSH ax -> ?
                     }else if(IsNum(cmd_arg)){
-                        //
+                        // Num in brackets
+                        (*ram)[(*n_cmd)++] = PUSH;
+                        (*ram)[(*n_cmd)++] = TO_RAM;
+                        (*ram)[(*n_cmd)++] = atof(cmd_arg);
                     }else{
                         DEBUG cout << "Invalid syntax on " << *n_cmd << " position" << endl;
                         return FATAL_ERROR;
                     }
 
                 }else if(IsRegister(cmd)){
+                    // Resister
                     int push_where = WichReg(cmd);
 
                     if(push_where == WRONG_COMMAND){
@@ -141,7 +147,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
                     }
 
                     (*ram)[(*n_cmd)++] = PUSH;
-                    (*ram)[(*n_cmd)++] = PUSH_TO_REG;
+                    (*ram)[(*n_cmd)++] = TO_REG;
 
                     if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
                     else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
@@ -149,8 +155,67 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
                     else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
 
                 }else if(IsNum(cmd)){
+                    // Numeric
                     (*ram)[(*n_cmd)++] = PUSH;
-                    (*ram)[(*n_cmd)++] = PUSH_TO_STK;
+                    (*ram)[(*n_cmd)++] = TO_STK;
+                    (*ram)[(*n_cmd)++] = atof(cmd);
+                }
+            }else{
+                DEBUG cout << "Unexpected error on position " << *n_cmd << endl;
+                return FATAL_ERROR;
+            }
+            */
+            if(fscanf(input, "%s", cmd) != 0){
+                if      (IsInBrackets(cmd)){
+                    char cmd_arg[128] = "";
+                    strncpy(cmd_arg, cmd + 1, strlen(cmd) - 2);
+                    cmd_arg[strlen(cmd) - 2] = '\0';
+
+                    if(IsRegister(cmd_arg)){
+                        // Register in brackets
+                        int push_where = WichReg(cmd_arg);
+
+                        if(push_where == WRONG_COMMAND){
+                            DEBUG cout << "Invalid syntax: " << cmd << endl;
+                            return FATAL_ERROR;
+                        }
+
+                        (*ram)[(*n_cmd)++] = PUSHRAMREG;
+
+                        if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
+                        else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
+                        else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
+                        else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+
+
+                    }else if(IsNum(cmd_arg)){
+                        // Num in brackets
+                        (*ram)[(*n_cmd)++] = PUSHRAM;
+                        (*ram)[(*n_cmd)++] = atof(cmd_arg);
+                    }else{
+                        DEBUG cout << "Invalid syntax on " << *n_cmd << " position" << endl;
+                        return FATAL_ERROR;
+                    }
+
+                }else if(IsRegister(cmd)){
+                    // Resister
+                    int push_where = WichReg(cmd);
+
+                    if(push_where == WRONG_COMMAND){
+                        DEBUG cout << "Invalid syntax: " << cmd << endl;
+                        return FATAL_ERROR;
+                    }
+
+                    (*ram)[(*n_cmd)++] = PUSHREG;
+
+                    if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
+                    else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
+                    else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
+                    else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+
+                }else if(IsNum(cmd)){
+                    // Numeric
+                    (*ram)[(*n_cmd)++] = PUSHNUM;
                     (*ram)[(*n_cmd)++] = atof(cmd);
                 }
             }else{
@@ -161,6 +226,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
 
         }else if(!strcmp(cmd, CPOP)){
             //ram[n_cmd++] = POP;
+            /*
             if(fscanf(input, "%s", cmd) == 0){
                 DEBUG cout << "Invalid syntax: " << cmd << endl;
                 return FATAL_ERROR;
@@ -187,6 +253,123 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
             else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
             else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
             else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+            */
+            /*
+            if(fscanf(input, "%s", cmd) != 0){
+                if      (IsInBrackets(cmd)){
+
+                    char cmd_arg[128] = "";
+                    strncpy(cmd_arg, cmd + 1, strlen(cmd) - 2);
+                    cmd_arg[strlen(cmd) - 2] = '\0';
+
+                    if      (IsRegister(cmd_arg)){
+                        // Register in brackets
+                        int push_where = WichReg(cmd);
+
+                        if(push_where == WRONG_COMMAND){
+                            DEBUG cout << "Invalid syntax: " << cmd << endl;
+                            return FATAL_ERROR;
+                        }
+
+                        (*ram)[(*n_cmd)++] = POP;
+                        (*ram)[(*n_cmd)++] = TO_REG;
+
+                        if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
+                        else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
+                        else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
+                        else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+
+                    }else if(IsNum(cmd_arg)){
+                        // Num in brackets
+                        (*ram)[(*n_cmd)++] = POP;
+                        (*ram)[(*n_cmd)++] = TO_RAM;
+                        (*ram)[(*n_cmd)++] = atof(cmd_arg);
+                    }else{
+                        DEBUG cout << "Invalid syntax: " << cmd_arg << endl;
+                        return FATAL_ERROR;
+                    }
+
+                }else if(IsRegister(cmd)){
+                    // Register
+                    int push_where = WichReg(cmd);
+
+                    if(push_where == WRONG_COMMAND){
+                        DEBUG cout << "Invalid syntax: " << cmd << endl;
+                        return FATAL_ERROR;
+                    }
+
+                    (*ram)[(*n_cmd)++] = POP;
+                    (*ram)[(*n_cmd)++] = TO_REG;
+
+                    if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
+                    else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
+                    else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
+                    else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+                }else{
+                    DEBUG cout << "Invalid syntax on " << *n_cmd << " position" << endl;
+                    return FATAL_ERROR;
+                }
+            }else{
+                DEBUG cout << "Unexpected error on position " << *n_cmd << endl;
+                return FATAL_ERROR;
+            }
+            */
+            if(fscanf(input, "%s", cmd) != 0){
+                if      (IsInBrackets(cmd)){
+
+                    char cmd_arg[128] = "";
+                    strncpy(cmd_arg, cmd + 1, strlen(cmd) - 2);
+                    cmd_arg[strlen(cmd) - 2] = '\0';
+
+                    if      (IsRegister(cmd_arg)){
+                        // Register in brackets
+                        int push_where = WichReg(cmd_arg);
+
+                        if(push_where == WRONG_COMMAND){
+                            DEBUG cout << "Invalid syntax: " << cmd << endl;
+                            return FATAL_ERROR;
+                        }
+
+                        (*ram)[(*n_cmd)++] = POPRAMREG;
+
+                        if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
+                        else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
+                        else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
+                        else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+
+                    }else if(IsNum(cmd_arg)){
+                        // Num in brackets
+                        (*ram)[(*n_cmd)++] = POPRAM;
+                        (*ram)[(*n_cmd)++] = atof(cmd_arg);
+                    }else{
+                        DEBUG cout << "Invalid syntax: " << cmd_arg << endl;
+                        return FATAL_ERROR;
+                    }
+
+                }else if(IsRegister(cmd)){
+                    // Register
+                    int push_where = WichReg(cmd);
+
+                    if(push_where == WRONG_COMMAND){
+                        DEBUG cout << "Invalid syntax: " << cmd << endl;
+                        return FATAL_ERROR;
+                    }
+
+                    (*ram)[(*n_cmd)++] = POPREG;
+
+                    if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
+                    else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
+                    else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
+                    else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
+                }else{
+                    DEBUG cout << "Invalid syntax on " << *n_cmd << " position" << endl;
+                    return FATAL_ERROR;
+                }
+            }else{
+                DEBUG cout << "Unexpected error on position " << *n_cmd << endl;
+                return FATAL_ERROR;
+            }
+
 
 
         }else if(!strcmp(cmd, CADD)){

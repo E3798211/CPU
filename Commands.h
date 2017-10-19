@@ -34,12 +34,21 @@ enum CMDS{
     CALL,       // 22
     RET,        // 23
 
+    PUSHNUM,    // 24
+    PUSHREG,    // 25
+    PUSHRAM,    // 26
+    PUSHRAMREG, // 27
+
+    POPREG,     // 28
+    POPRAM,     // 29
+    POPRAMREG,  // 30
+
     UNKNOWN_CMD
 };
 
-const int PUSH_TO_REG = 1;
-const int PUSH_TO_STK = 0;
-const int PUSH_TO_RAM = 3;
+const int TO_REG = 1;
+const int TO_STK = 0;
+const int TO_RAM = 3;
 
 #define CEND     "end"
 
