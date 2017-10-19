@@ -1,0 +1,311 @@
+in
+pop ax
+in
+pop bx
+in
+pop cx
+
+
+call EquasionType
+
+push [3]
+push 0
+je NOROOTS
+
+push [3]
+push 1
+je ONEROOT
+
+push [3]
+push 2
+je TWOROOTS
+
+push [3]
+push 3
+je INFROOTS
+
+
+
+label NOROOTS
+push 0
+pop [0]
+push 0
+push 0
+je ROOTSFOUND
+
+label ONEROOT
+call LinearEquasionSolve
+push 0
+push 0
+je ROOTSFOUND
+
+
+label TWOROOTS
+call BinomEquasionSolve
+push 0
+push 0
+je ROOTSFOUND
+
+label INFROOTS
+push 3
+pop [0]
+push 0
+push 0
+je ROOTSFOUND
+
+label ROOTSFOUND
+
+call PrintRoots
+
+end
+
+
+
+
+
+label EquasionType
+
+push ax
+push 0
+
+jne Bin
+je  ProbablyLin
+
+label Bin
+push 2
+pop [3]
+push 0
+push 0
+je EquasionTypeEnd
+
+label ProbablyLin
+push bx
+push 0
+
+jne TrueLin
+je  NotTrueLin
+
+label TrueLin
+push 1
+pop [3]
+push 0
+push 0
+je EquasionTypeEnd
+
+label NotTrueLin
+push cx
+push 0
+
+jne NoRootsAtAll
+je  InfRoots
+
+label NoRootsAtAll
+push 0
+pop [3]
+push 0
+push 0
+je EquasionTypeEnd
+
+label InfRoots
+push 3
+pop [3]
+push 0
+push 0
+je EquasionTypeEnd
+
+label EquasionTypeEnd
+ret
+
+
+
+
+
+label BinomEquasionSolve
+
+call Discriminant_count
+
+push dx
+push 0
+
+ja	TwoRoots
+jb	NoRoots
+je	OneRoot
+
+label TwoRoots
+call CountRoot+
+call CountRoot-
+
+push 2
+pop [0]
+push 0
+push 0
+je BinomEquasionSolveEnd
+
+label OneRoot
+call CountRoot+
+
+push 1
+pop [0]
+push 0
+push 0
+je BinomEquasionSolveEnd
+
+label NoRoots
+push 0
+pop [0]
+push 0
+push 0
+je BinomEquasionSolveEnd
+
+label BinomEquasionSolveEnd
+ret
+
+
+
+
+label LinearEquasionSolve
+
+push cx
+push -1
+mul
+push bx
+div
+
+pop [1]
+
+push 1
+pop [0]
+
+ret
+
+
+
+
+label Discriminant_count
+
+push bx
+push bx
+mul
+pop dx
+
+push ax
+push cx
+mul
+push 4
+mul
+push -1
+mul
+
+push dx
+add
+
+pop dx
+ret
+
+
+
+label CountRoot+
+
+push bx
+push -1
+mul
+push dx
+fsqrt
+add
+
+push 2
+push ax
+mul
+div
+
+pop [1]
+
+ret
+
+
+
+label CountRoot-
+
+push bx
+push -1
+mul
+push dx
+fsqrt
+push -1
+mul
+add
+
+push 2
+push ax
+mul
+div
+
+pop [2]
+
+ret
+
+
+
+
+
+
+label PrintRoots
+
+push [0]
+push 0
+je PrintNoRoots
+
+push [0]
+push 1
+je PrintOneRoot
+
+push [0]
+push 2
+je PrintTwoRoots
+
+push [0]
+push 3
+je PrintInfRoots
+
+
+label PrintNoRoots
+push [0]
+out
+push 0
+push 0
+je PrintRootsEnd
+
+label PrintOneRoot
+push [0]
+out
+push [1]
+out
+push 0
+push 0
+je PrintRootsEnd
+
+label PrintTwoRoots
+push [0]
+out
+push [1]
+out
+push [2]
+out
+push 0
+push 0
+je PrintRootsEnd
+
+label PrintInfRoots
+push [0]
+out
+push 0
+push 0
+je PrintRootsEnd
+
+
+label PrintRootsEnd
+ret
+
+
+
+

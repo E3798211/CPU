@@ -101,7 +101,7 @@ int Cpu::Run(char* file_name)
     while(cmd_sequence[cmd_num] != END){
         //cout << "Command num = " << cmd_num << endl;
         //cout << "\n";
-
+        //cout << "// ================== GO" << endl;
         if(Cpu::Execute(cmd_sequence, cmd_num) == UNKNOWN_CMD){
             DEBUG cout << "!!! Unknown command!\n!!! Process terminated." << endl;
             DEBUG cout << "cmd_num = " << cmd_num << endl;
@@ -112,9 +112,10 @@ int Cpu::Run(char* file_name)
         cmd_num++;
         //cin.get();
 
-        Cpu::PrintStack();
-        Cpu::PrintRam();
-        Cpu::PrintRegisters();
+        //Cpu::PrintRam();
+        //Cpu::PrintRegisters();
+        //Cpu::PrintStack();
+        //Cpu::PrintCallStack();
     }
 
     //cout << "At the end:" << endl;
@@ -130,37 +131,6 @@ int Cpu::Run(char* file_name)
 int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 {
     CPU_ASSERT();
-    /*
-    if      (cmd_sequence[cmd_num] == PUSH){
-
-        /*
-        cmd_num++;
-        if(cmd_sequence[cmd_num] == TO_STK){
-            cmd_num++;
-            Cpu::st.Push(&cmd_sequence[cmd_num]);
-        }else if(cmd_sequence[cmd_num] == TO_REG){
-            cmd_num++;
-
-            int reg_num = -1;
-            if      (cmd_sequence[cmd_num] == AX)     reg_num = 0;
-            else if (cmd_sequence[cmd_num] == BX)     reg_num = 1;
-            else if (cmd_sequence[cmd_num] == CX)     reg_num = 2;
-            else if (cmd_sequence[cmd_num] == DX)     reg_num = 3;
-
-            if(reg_num < 0){
-                DEBUG cout << "Unknown command " << cmd_sequence[cmd_num] << endl;
-                return UNKNOWN_CMD;
-            }
-
-            Cpu::st.Push(registers + reg_num);
-            cpu_hash = HashCount();
-        }else if(cmd_sequence[cmd_num] == TO_RAM){
-            cmd_num++;
-
-            int place_in_ram = cmd_sequence[cmd_num];
-            Cpu::st.Push(&ram[place_in_ram]);
-        }
-        */
 
     if      (cmd_sequence[cmd_num] == PUSHNUM){
         cmd_num++;
@@ -202,73 +172,6 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 
         int place_in_ram = registers[reg_num];
         Cpu::st.Push(&ram[place_in_ram]);
-
-    /*
-    }else if(cmd_sequence[cmd_num] == POP){
-
-        /*
-        cmd_num++;
-
-        int reg_num = -1;
-        if      (cmd_sequence[cmd_num] == AX)     reg_num = 0;
-        else if (cmd_sequence[cmd_num] == BX)     reg_num = 1;
-        else if (cmd_sequence[cmd_num] == CX)     reg_num = 2;
-        else if (cmd_sequence[cmd_num] == DX)     reg_num = 3;
-
-        if(reg_num < 0){
-            DEBUG cout << "Unknown command " << cmd_sequence[cmd_num] << endl;
-            return UNKNOWN_CMD;
-        }
-
-        double tmp = -1;
-        if(Cpu::st.Pop(&tmp) == SUCCESS){
-            Cpu::registers[reg_num] = tmp;
-            cpu_hash = HashCount();
-        }else{
-            DEBUG cout << "Nothing have been pushed in register." << endl;
-        }
-        */
-        /*
-        cmd_num++;
-        if      (cmd_sequence[cmd_num] == TO_REG){
-            cmd_num++;
-
-            int reg_num = -1;
-            if      (cmd_sequence[cmd_num] == AX)     reg_num = 0;
-            else if (cmd_sequence[cmd_num] == BX)     reg_num = 1;
-            else if (cmd_sequence[cmd_num] == CX)     reg_num = 2;
-            else if (cmd_sequence[cmd_num] == DX)     reg_num = 3;
-
-            if(reg_num < 0){
-                DEBUG cout << "Unknown command " << cmd_sequence[cmd_num] << endl;
-                return UNKNOWN_CMD;
-            }
-
-            double tmp = -1;
-            if(Cpu::st.Pop(&tmp) == SUCCESS){
-                Cpu::registers[reg_num] = tmp;
-                cpu_hash = HashCount();
-            }else{
-                DEBUG cout << "Nothing have been pushed in register." << endl;
-            }
-        }else if(cmd_sequence[cmd_num] == TO_RAM){
-            cmd_num++;
-
-            int place_in_ram = cmd_sequence[cmd_num];
-
-            double tmp = -1;
-            if(Cpu::st.Pop(&tmp) == SUCCESS){
-                //Cpu::registers[reg_num] = tmp;
-                ram[place_in_ram] = tmp;
-                cpu_hash = HashCount();
-            }else{
-                DEBUG cout << "Nothing have been pushed in RAM." << endl;
-            }
-
-        }else{
-            //
-        }
-        */
 
     }else if(cmd_sequence[cmd_num] == POPREG){
         cmd_num++;
@@ -411,8 +314,6 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
         cout << "Enter: ";
         while(scanf("%lg", &tmp) == 0){
             cout << "Invalid input." << endl;
-            //getchar();
-            //getchar();
         }
         Cpu::st.Push(&tmp);
 
@@ -469,6 +370,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 
         cmd_num++;
         cmd_num = cmd_sequence[cmd_num] - 1;    // (-1) because in the end of the loop cmd_num will be incremented
+        //cout << "call to " << cmd_num << endl;
 
     }else if(cmd_sequence[cmd_num] == RET){
         double tmp = cmd_num;
@@ -577,7 +479,10 @@ int Cpu::Jmp(int* cmd_num, int jmp_to, bool (*pCompare)(MyType a, MyType b))
 
     if(pCompare(second, first)){
         *(cmd_num) = jmp_to - 1;    // Because in the end of the loop command num will be incremented
-         //cout << "jumped to " << jmp_to << endl;
+        //cout << "jumped to " << jmp_to << endl;
+    }else{
+        //cout << "didn't jump" << endl;
+        //exit(5);
     }
 
 
@@ -603,5 +508,11 @@ int Cpu::PrintRam()
 
     for(int i = 0; i < 10; i++)
         cout << "[" << i << "] = \t" << ram[i] << endl;
+}
+
+int Cpu::PrintCallStack()
+{
+    cout << "CallStack:" << endl;
+    return call_st.PrintStack();
 }
 

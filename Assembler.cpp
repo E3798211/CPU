@@ -53,6 +53,7 @@ int FileRead(char* file_name1, char* file_name2)
     */
 
 
+
     fprintf(output, "%s %d %d\n", GENUINE_SIGNATURE, GENUINE_VERSION, n_cmd);
     for(int i = 0; i < n_cmd; i++){
         fprintf(output, "%lg\n", ram[i]);
@@ -80,91 +81,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
 
 
         if      (!strcmp(cmd, CPUSH)){
-            /*
-            int push_where = 0;
 
-            if(fscanf(input, "%lg", &num) == 0){
-                if(fscanf(input, "%s", cmd) == 0){
-                    DEBUG cout << "Invalid syntax: " << cmd << endl;
-                    return FATAL_ERROR;
-                }else{
-                    if      (!strcmp(cmd, CAX))   push_where = AX;
-                    else if (!strcmp(cmd, CBX))   push_where = BX;
-                    else if (!strcmp(cmd, CCX))   push_where = CX;
-                    else if (!strcmp(cmd, CDX))   push_where = DX;
-                    else                          push_where = WRONG_COMMAND;
-
-                    if(push_where == WRONG_COMMAND){
-                        DEBUG cout << "Invalid syntax: " << cmd << endl;
-                        return FATAL_ERROR;
-                    }
-
-                    // if we are here everything is ok
-
-                    (*ram)[(*n_cmd)++] = PUSH;
-                    (*ram)[(*n_cmd)++] = PUSH_TO_REG;
-
-                    if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
-                    else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
-                    else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
-                    else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
-                }
-            }else{
-                (*ram)[(*n_cmd)++] = PUSH;
-                (*ram)[(*n_cmd)++] = PUSH_TO_STK;
-                (*ram)[(*n_cmd)++] = num;
-            }
-
-            //int push_where = 0;
-
-            if(fscanf(input, "%s", cmd) != 0){
-                if      (IsInBrackets(cmd)){
-                    char cmd_arg[128] = "";
-                    strncpy(cmd_arg, cmd + 1, strlen(cmd) - 2);
-                    cmd_arg[strlen(cmd) - 2] = '\0';
-
-                    if(IsRegister(cmd_arg)){
-                        // Register in brackets
-                        // Should be made with POP
-                        // PUSH ax -> ?
-                    }else if(IsNum(cmd_arg)){
-                        // Num in brackets
-                        (*ram)[(*n_cmd)++] = PUSH;
-                        (*ram)[(*n_cmd)++] = TO_RAM;
-                        (*ram)[(*n_cmd)++] = atof(cmd_arg);
-                    }else{
-                        DEBUG cout << "Invalid syntax on " << *n_cmd << " position" << endl;
-                        return FATAL_ERROR;
-                    }
-
-                }else if(IsRegister(cmd)){
-                    // Resister
-                    int push_where = WichReg(cmd);
-
-                    if(push_where == WRONG_COMMAND){
-                        DEBUG cout << "Invalid syntax: " << cmd << endl;
-                        return FATAL_ERROR;
-                    }
-
-                    (*ram)[(*n_cmd)++] = PUSH;
-                    (*ram)[(*n_cmd)++] = TO_REG;
-
-                    if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
-                    else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
-                    else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
-                    else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
-
-                }else if(IsNum(cmd)){
-                    // Numeric
-                    (*ram)[(*n_cmd)++] = PUSH;
-                    (*ram)[(*n_cmd)++] = TO_STK;
-                    (*ram)[(*n_cmd)++] = atof(cmd);
-                }
-            }else{
-                DEBUG cout << "Unexpected error on position " << *n_cmd << endl;
-                return FATAL_ERROR;
-            }
-            */
             if(fscanf(input, "%s", cmd) != 0){
                 if      (IsInBrackets(cmd)){
                     char cmd_arg[128] = "";
@@ -226,94 +143,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
 
         }else if(!strcmp(cmd, CPOP)){
             //ram[n_cmd++] = POP;
-            /*
-            if(fscanf(input, "%s", cmd) == 0){
-                DEBUG cout << "Invalid syntax: " << cmd << endl;
-                return FATAL_ERROR;
-            }
 
-            int push_where = 0;
-
-            if      (!strcmp(cmd, CAX))   push_where = AX;
-            else if (!strcmp(cmd, CBX))   push_where = BX;
-            else if (!strcmp(cmd, CCX))   push_where = CX;
-            else if (!strcmp(cmd, CDX))   push_where = DX;
-            else                          push_where = WRONG_COMMAND;
-
-            if(push_where == WRONG_COMMAND){
-                DEBUG cout << "Invalid syntax: " << cmd << endl;
-                return FATAL_ERROR;
-            }
-
-            // if we are here everything is ok
-
-            (*ram)[(*n_cmd)++] = POP;
-
-            if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
-            else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
-            else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
-            else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
-            */
-            /*
-            if(fscanf(input, "%s", cmd) != 0){
-                if      (IsInBrackets(cmd)){
-
-                    char cmd_arg[128] = "";
-                    strncpy(cmd_arg, cmd + 1, strlen(cmd) - 2);
-                    cmd_arg[strlen(cmd) - 2] = '\0';
-
-                    if      (IsRegister(cmd_arg)){
-                        // Register in brackets
-                        int push_where = WichReg(cmd);
-
-                        if(push_where == WRONG_COMMAND){
-                            DEBUG cout << "Invalid syntax: " << cmd << endl;
-                            return FATAL_ERROR;
-                        }
-
-                        (*ram)[(*n_cmd)++] = POP;
-                        (*ram)[(*n_cmd)++] = TO_REG;
-
-                        if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
-                        else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
-                        else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
-                        else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
-
-                    }else if(IsNum(cmd_arg)){
-                        // Num in brackets
-                        (*ram)[(*n_cmd)++] = POP;
-                        (*ram)[(*n_cmd)++] = TO_RAM;
-                        (*ram)[(*n_cmd)++] = atof(cmd_arg);
-                    }else{
-                        DEBUG cout << "Invalid syntax: " << cmd_arg << endl;
-                        return FATAL_ERROR;
-                    }
-
-                }else if(IsRegister(cmd)){
-                    // Register
-                    int push_where = WichReg(cmd);
-
-                    if(push_where == WRONG_COMMAND){
-                        DEBUG cout << "Invalid syntax: " << cmd << endl;
-                        return FATAL_ERROR;
-                    }
-
-                    (*ram)[(*n_cmd)++] = POP;
-                    (*ram)[(*n_cmd)++] = TO_REG;
-
-                    if      (push_where == AX)    (*ram)[(*n_cmd)++] = AX;
-                    else if (push_where == BX)    (*ram)[(*n_cmd)++] = BX;
-                    else if (push_where == CX)    (*ram)[(*n_cmd)++] = CX;
-                    else if (push_where == DX)    (*ram)[(*n_cmd)++] = DX;
-                }else{
-                    DEBUG cout << "Invalid syntax on " << *n_cmd << " position" << endl;
-                    return FATAL_ERROR;
-                }
-            }else{
-                DEBUG cout << "Unexpected error on position " << *n_cmd << endl;
-                return FATAL_ERROR;
-            }
-            */
             if(fscanf(input, "%s", cmd) != 0){
                 if      (IsInBrackets(cmd)){
 
@@ -462,9 +292,9 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
 
                 if(!already_exist){
                     strcpy(((*labels)[(*label_num)]).name, cmd);
-                    ((*labels)[(*label_num)]).place = *n_cmd;
+                    ((*labels)[(*label_num)]).place = (*n_cmd);
                 }
-                    (*label_num)++;
+                (*label_num)++;
             }else{
                 cout << "Unexpected problem on " << *n_cmd << " position" << endl;
                 return FATAL_ERROR;
@@ -502,7 +332,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
 int FindLabel(char* name, Label* labels, int n_labels)
 {
     int label_num = 0;
-    while(label_num <= n_labels){
+    while(label_num <= /*n_labels*/LABELS_MAX){
         if(!strcmp(labels[label_num].name, name))
             return labels[label_num].place;
 

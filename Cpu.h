@@ -91,6 +91,7 @@ public:
     int PrintStack();
     int PrintRegisters();
     int PrintRam();
+    int PrintCallStack();
 
 
     /// Verificator.

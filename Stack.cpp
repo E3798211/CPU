@@ -288,6 +288,7 @@ int Stack::PrintStack()
 {
     ASSERT();
 
+    cout << "stack:" << endl;
     int i = 0;
     while(i < _n_elem){
         cout << "[" << i << "] = \t" << _stack[i + 1] << endl;
