@@ -38,6 +38,8 @@ private:
     double registers[4];
     double ram[RAM_SIZE];
 
+    int bp = 0;
+
     long long int cpu_hash = 0;
 
     /// Hash-count
@@ -51,6 +53,9 @@ public:
         registers[1] = 0;
         registers[2] = 0;
         registers[3] = 0;
+
+        bp = 0;
+
         cpu_hash = HashCount();
     };
 

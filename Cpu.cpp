@@ -192,7 +192,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
             Cpu::registers[reg_num] = tmp;
             cpu_hash = HashCount();
         }else{
-            DEBUG cout << "Nothing have been pushed in register." << endl;
+            DEBUG cout << "Nothing has been pushed in register." << endl;
         }
 
     }else if(cmd_sequence[cmd_num] == POPRAM){
@@ -205,7 +205,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
             ram[place_in_ram] = tmp;
             cpu_hash = HashCount();
         }else{
-            DEBUG cout << "Nothing have been pushed in RAM." << endl;
+            DEBUG cout << "Nothing has been pushed in RAM." << endl;
         }
 
     }else if(cmd_sequence[cmd_num] == POPRAMREG){
@@ -245,7 +245,8 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
-                                        return b - a;
+                                        //return b - a;
+                                        return a - b;
                                     });
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
@@ -265,7 +266,8 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
 
         int res = Cpu::BinOp([] (MyType a, MyType b)-> MyType
                                     {
-                                        return b / a;
+                                        //return b / a;
+                                        return a / b;
                                     });
         if(res == NOT_ENOUGH_ELEMENTS)
             cout << "\nNot enought elements in the stack" << endl;
