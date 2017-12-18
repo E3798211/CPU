@@ -57,10 +57,13 @@ int FileRead(char* file_name1, char* file_name2)
     fprintf(output, "%s %d %d\n", GENUINE_SIGNATURE, GENUINE_VERSION, n_cmd);
     for(int i = 0; i < n_cmd; i++){
         fprintf(output, "%lg\n", ram[i]);
+        //DEBUG printf("%lg\n", ram[i]);
     }
 
     fclose(input);
     fclose(output);
+
+    //printf("=====   done   =====\n");
 
     return SUCCESS;
 }
@@ -119,7 +122,7 @@ int Pass(FILE *input, double** ram, int* n_cmd, Label** labels, int* label_num)
                     int push_where = WichReg(cmd);
 
                     if(push_where == WRONG_COMMAND){
-                        DEBUG cout << "Invalid syntax: " << cmd << endl;
+                        DEBUG cout << "Invalid syntax: |" << cmd << "|" << endl;
                         return FATAL_ERROR;
                     }
 

@@ -20,6 +20,8 @@ long long int Cpu::HashCount()
 
 int Cpu::FileRead(double** cmd_sequence, char* file_name)
 {
+    //cout << "entered Cpu::FileRead()\n";
+
     // Exceptions
     assert(file_name != nullptr);
 
@@ -80,6 +82,7 @@ int Cpu::FileRead(double** cmd_sequence, char* file_name)
         }
     }
 
+    //cout << " quited Cpu::FileRead()\n";
     return SUCCESS;
 }
 
@@ -97,6 +100,9 @@ int Cpu::Run(char* file_name)
         return FILE_ERROR;
     }
 
+    //for(int i = 0; i < 60; i++)
+        //cout << "cmd[" << i << "]\t= " << cmd_sequence[i] << endl;
+
     int cmd_num = 0;
     while(cmd_sequence[cmd_num] != END){
         //cout << "Command num = " << cmd_num << endl;
@@ -112,10 +118,15 @@ int Cpu::Run(char* file_name)
         cmd_num++;
         //cin.get();
 
-        //Cpu::PrintRam();
-        //Cpu::PrintRegisters();
-        //Cpu::PrintStack();
-        //Cpu::PrintCallStack();
+        /*
+        Cpu::PrintRam();
+        Cpu::PrintRegisters();
+        Cpu::PrintStack();
+        Cpu::PrintCallStack();
+
+        getchar();
+        */
+
     }
 
     //cout << "At the end:" << endl;
@@ -228,7 +239,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
             ram[place_in_ram] = tmp;
             cpu_hash = HashCount();
         }else{
-            DEBUG cout << "Nothing have been pushed in RAM." << endl;
+            DEBUG cout << "Nothing has been pushed in RAM." << endl;
         }
 
     }else if(cmd_sequence[cmd_num] == ADD){
@@ -306,7 +317,7 @@ int Cpu::Execute(double* cmd_sequence, int &cmd_num)
     }else if(cmd_sequence[cmd_num] == OUT){
 
         if(Cpu::st.GetNElem() > 0){
-            cout << "Last elem = " << Cpu::st.GetLastElem() << endl;
+            cout << "\\ " << Cpu::st.GetLastElem() << endl;
         }else
             cout << "Stack is empty" << endl;
 
@@ -479,7 +490,8 @@ int Cpu::Jmp(int* cmd_num, int jmp_to, bool (*pCompare)(MyType a, MyType b))
     Cpu::st.Pop(&first);
     Cpu::st.Pop(&second);
 
-    if(pCompare(second, first)){
+    //if(pCompare(second, first)){
+    if(pCompare(first, second)){
         *(cmd_num) = jmp_to - 1;    // Because in the end of the loop command num will be incremented
         //cout << "jumped to " << jmp_to << endl;
     }else{
